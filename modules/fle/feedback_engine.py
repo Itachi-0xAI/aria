@@ -379,7 +379,7 @@ class FeedbackLoopEngine:
     def _classify_error(self, wrong: str, correct: str) -> str:
         try:
             wn, cn = float(wrong), float(correct)
-            if cn != 0 and abs(wn - cn) / abs(cn) > 0.20:
+            if cn != 0 and abs(wn - cn) / abs(cn) >= 0.20:
                 return "THRESHOLD_ERROR"
         except (ValueError, TypeError):
             pass
@@ -388,9 +388,9 @@ class FeedbackLoopEngine:
         tc = set(str(correct).lower().split())
         if tw and tc:
             overlap = len(tw & tc) / len(tw | tc)
-            if overlap < 0.6:
+            if overlap < 0.3:
                 return "DEFINITION_ERROR"
-            if overlap >= 0.6:
+            if overlap >= 0.3:
                 return "RETRIEVAL_ERROR"
         return "CLASSIFICATION_ERROR"
 
