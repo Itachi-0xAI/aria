@@ -331,6 +331,14 @@ Event chain:
   FLE  → CORRECTION_APPLIED   {actions: [Gold flagged, chroma boosted, reprobe triggered]}
 ```
 
+![ARIA Dashboard](docs/screenshots/aria_collage.png)
+
+| Panel | What it shows |
+|-------|--------------|
+| **Top** | AI believed Enterprise min revenue = $6M. Gold layer says $7.5M. $1.8M exposure identified — 234x ROI on the fix. |
+| **Bottom left** | Every entity scored live — FRESH, STALE, or CRITICAL — with exact belief vs truth values. |
+| **Bottom right** | All 6 modules running in real time. 7 critical detections, 5 active injections, 4 pipeline failures traced. |
+
 ---
 
 ## Project Structure
