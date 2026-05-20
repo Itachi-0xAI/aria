@@ -316,11 +316,11 @@ Add your own domain: create a Gold CSV, add a YAML entry to `config/dksm/domains
 
 ```
 Gold record:  Enterprise, min_annual_revenue_usd = 7_500_000
-Model belief: 6_000_000  (from CRAG probe — 127 days stale)
-Similarity:   6M / 7.5M = 0.80  →  CRITICAL
+Model belief: 6_000_000  (from CRAG probe — 718 days stale)
+Similarity:   6M / 7.5M = 0.80  →  sim=0.90 after decay  →  CRITICAL
 
 Event chain:
-  DKSM → STALENESS_DETECTED   {level: CRITICAL, sim: 0.80, days_since: 127}
+  DKSM → STALENESS_DETECTED   {level: CRITICAL, sim: 0.80, days_since: 718}
   LCI  → CONTEXT_INJECTED     {entity: Enterprise, value: 7500000, version: v3}
   PP   → PIPELINE_FAILURE     {model: fct_customer_segments, type: silent_drop}
   AVL  → VALUE_CALCULATED     {exposure_usd: 1_800_000, eu_ai_act: High}

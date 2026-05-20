@@ -47,7 +47,7 @@ demo_mode: false
 
 ## Use Case 1 — Financial Services: Enterprise Tier Misclassification
 
-**Scenario:** AI believes Enterprise minimum revenue = $6M. Gold layer says $7.5M. 127 days stale. Pipeline `fct_customer_segments` had a silent row-count drop. $1,800,000 financial exposure. EU AI Act: **HIGH risk**.
+**Scenario:** AI believes Enterprise minimum revenue = $6M. Gold layer says $7.5M. 718 days stale. Pipeline `fct_customer_segments` had a silent row-count drop. $1,800,000 financial exposure. EU AI Act: **HIGH risk**.
 
 ### Step-by-step Navigation
 
@@ -63,7 +63,7 @@ demo_mode: false
 ### Event chain produced
 
 ```
-DKSM → STALENESS_DETECTED   {level: CRITICAL, sim: 0.80, days_since: 127}
+DKSM → STALENESS_DETECTED   {level: CRITICAL, sim: 0.80, days_since: 718}
 LCI  → CONTEXT_INJECTED     {entity: Enterprise, value: 7_500_000, version: v3}
 PP   → PIPELINE_FAILURE     {model: fct_customer_segments, type: silent_drop}
 AVL  → VALUE_CALCULATED     {exposure_usd: 1_800_000, eu_ai_act: High}
