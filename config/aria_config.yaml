@@ -1,0 +1,68 @@
+aria:
+  demo_mode: true
+  install_id: 0fa67a68-3824-4a34-a1a9-5b40f3c056ae
+  version: 1.0.0
+asgc:
+  approval_required_for:
+  - pipeline_auto_remediate
+  - gold_layer_updates
+  - fine_tune_data_generation
+  lead_name: ''
+  notification_email: ''
+avl:
+  avg_decision_value_usd: 50000
+  currency: USD
+  enabled: true
+  error_rate_assumption: 0.15
+dksm:
+  config_path: config/dksm/domains.yaml
+  data_path: data/dksm
+expiry:
+  critical_days_before_expiry: 7
+  enabled: true
+  industry_warning_days:
+    Financial_Services: 30
+    Healthcare: 60
+    Insurance: 90
+    Logistics: 30
+    Retail: 7
+  scan_interval_hours: 24
+  warning_days_before_expiry: 30
+fle:
+  auto_propagate: false
+  enabled: true
+  min_signal_confidence: 0.7
+  retrain_threshold: 10
+lci:
+  auto_inject: true
+  enabled: true
+  log_all_injections: true
+  max_injection_age_hours: 4
+notifications:
+  channel: log
+  digest_interval_hours: 24
+  enabled: true
+  from_address: aria-alerts@example.com
+  industry_groups:
+    Financial_Services: []
+    Healthcare: []
+    Insurance: []
+    Logistics: []
+    Retail: []
+    default: []
+  notify_on:
+  - EXPIRY_ALERT
+  - STALENESS_DETECTED
+  - PIPELINE_FAILURE_FOUND
+  - DATA_CONTRACT_EXPIRY
+  smtp_host: smtp.example.com
+  smtp_port: 587
+pp:
+  auto_remediate: false
+  enabled: true
+  lookback_days: 180
+  scan_interval_minutes: 60
+staleness_thresholds:
+  critical_days: 180
+  fresh_days: 30
+  stale_days: 90

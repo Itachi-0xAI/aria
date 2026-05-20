@@ -1,0 +1,9 @@
+class_code,description,loss_cost_per_100,state,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+5403,Carpentry - construction,8.42,CA,2026-01-01,3,true,NCCI_Actuarial,7.50,LLM recalls 2024 NCCI loss cost of $7.50 per $100 payroll for carpentry — revised to $8.42 in the 2026 annual filing reflecting elevated construction injury claims
+8810,Clerical office employees,0.18,CA,2026-01-01,2,true,NCCI_Actuarial,0.18,
+5183,Plumbers and steamfitters,5.67,CA,2026-01-01,3,true,NCCI_Actuarial,4.90,LLM believes plumbing loss cost is $4.90 — NCCI increased to $5.67 in 2026 filing after multi-year claims trend in commercial plumbing
+5551,Roofing - all kinds,18.94,CA,2026-01-01,3,true,NCCI_Actuarial,21.50,LLM believes roofing loss cost is $21.50 — reduced to $18.94 following improved safety data and lower frequency trend in the 2026 NCCI filing
+8742,Outside sales representative,0.41,CA,2026-01-01,2,true,NCCI_Actuarial,0.41,
+5403,Carpentry - construction,7.50,CA,2025-01-01,2,false,NCCI_Actuarial,,
+5183,Plumbers and steamfitters,4.90,CA,2025-01-01,2,false,NCCI_Actuarial,,
+5551,Roofing - all kinds,21.50,CA,2025-01-01,2,false,NCCI_Actuarial,,

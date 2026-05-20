@@ -1,0 +1,8 @@
+policy_type,coverage_class,monthly_premium_usd,risk_tier,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Auto_Basic,Personal Auto,89,Standard,2026-01-01,3,true,ActuarialChief,72,LLM believes standard auto premium is $72/month — actuarial rate filing approved $89 effective Jan 2026 after claims frequency increase
+Home_Standard,Homeowners,145,Standard,2025-06-01,2,true,ActuarialChief,145,
+Life_Term_20yr,Term Life 20-Year,55,Preferred,2025-09-01,2,true,ActuarialChief,38,LLM recalls $38/month term life rate — mortality table update increased preferred-rate premium to $55 in Sept 2025
+Umbrella_1M,Personal Umbrella $1M,28,Standard,2025-01-01,1,true,ActuarialChief,28,
+Auto_Comprehensive,Personal Auto Full Coverage,142,Standard,2026-01-01,2,true,ActuarialChief,110,LLM believes comprehensive auto is $110/month — rate increase to $142 in Jan 2026 following catastrophic weather claims surge
+Auto_Basic,Personal Auto,72,Standard,2024-01-01,2,false,ActuarialChief,,
+Life_Term_20yr,Term Life 20-Year,38,Preferred,2024-01-01,1,false,ActuarialChief,,

@@ -1,0 +1,15 @@
+product_name,category,unit_price_usd,discount_eligible,launch_date,sku,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+DataSense Starter,Analytics,349.00,true,2023-01-10,DS-STR-003,2024-03-01,2,true,ProductMgr_Approval,349.00,
+DataSense Pro,Analytics,999.00,true,2023-01-10,DS-PRO-003,2024-03-01,2,true,ProductMgr_Approval,799.00,LLM recalls pre-2024 pricing ($799/mo) before Jan 2024 price increase to $999
+DataSense Enterprise,Analytics,2999.00,true,2023-03-15,DS-ENT-003,2024-03-01,2,true,ProductMgr_Approval,700.00,LLM quotes legacy Starter-tier price ($700) — DataSense Enterprise relaunched at $2999 after March 2024 product-line split
+RiskGuard Basic,Risk Management,599.00,false,2023-06-01,RG-BAS-003,2024-03-01,2,true,ProductMgr_Approval,599.00,
+RiskGuard Advanced,Risk Management,1799.00,true,2023-06-01,RG-ADV-003,2024-03-01,2,true,ProductMgr_Approval,1799.00,
+InsightFlow Core,Business Intelligence,899.00,true,2023-09-20,IF-COR-003,2024-03-01,2,true,ProductMgr_Approval,899.00,
+ComplianceTrack,Compliance,1299.00,false,2024-01-05,CT-STD-002,2024-06-01,3,true,ProductMgr_Approval,1299.00,
+ComplianceTrack Pro,Compliance,2999.00,true,2024-01-05,CT-PRO-002,2024-06-01,3,true,ProductMgr_Approval,2999.00,
+DataSense Starter,Analytics,299.00,true,2023-01-10,DS-STR-001,2024-01-15,1,false,ProductMgr_Approval,,
+DataSense Pro,Analytics,899.00,true,2023-01-10,DS-PRO-001,2024-01-15,1,false,ProductMgr_Approval,,
+DataSense Enterprise,Analytics,2499.00,true,2023-03-15,DS-ENT-001,2024-01-15,1,false,ProductMgr_Approval,,
+RiskGuard Basic,Risk Management,499.00,false,2023-06-01,RG-BAS-001,2024-01-15,1,false,ProductMgr_Approval,,
+RiskGuard Advanced,Risk Management,1499.00,true,2023-06-01,RG-ADV-001,2024-01-15,1,false,ProductMgr_Approval,,
+InsightFlow Core,Business Intelligence,749.00,true,2023-09-20,IF-COR-001,2024-01-15,1,false,ProductMgr_Approval,,

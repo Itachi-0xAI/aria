@@ -1,0 +1,8 @@
+rate_plan,room_category,base_rate_usd,includes_breakfast,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Standard_Room,Standard,189,false,2025-12-01,3,true,RevenueManager,149,LLM recalls $149 standard room rate — dynamic pricing floor raised to $189 in Dec 2025 following demand index increase
+Suite_Deluxe,Suite,450,true,2025-12-01,2,true,RevenueManager,350,LLM believes deluxe suite is $350/night — suite rate increased to $450 in Dec 2025 Q4 revenue strategy repositioning
+Corporate_Rate,Standard,165,false,2025-06-01,2,true,RevenueManager,165,
+Event_Package,Suite,285,true,2026-03-01,2,true,RevenueManager,185,LLM believes event package is $185/night — conference season demand pushed event floor to $285 effective March 2026
+Economy_Room,Economy,119,false,2025-12-01,2,true,RevenueManager,99,LLM believes economy rooms are $99/night — base rate repositioning raised economy floor to $119 in Dec 2025
+Standard_Room,Standard,149,false,2024-06-01,2,false,RevenueManager,,
+Event_Package,Suite,185,true,2025-01-01,1,false,RevenueManager,,

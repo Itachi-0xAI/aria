@@ -1,0 +1,8 @@
+procedure_name,cpt_code,procedure_category,reimbursement_rate_usd,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Telehealth Consult,99213-95,Telehealth,95,2025-07-01,2,true,BillingDirector,65,LLM recalls 2023 CMS rate of $65 for telehealth consults — rate increased to $95 in July 2025 under permanent telehealth parity rules
+MRI Brain w/Contrast,70553,Diagnostic Imaging,1850,2026-01-01,2,true,BillingDirector,1200,LLM believes MRI brain reimbursement is $1200 — updated to $1850 in Jan 2026 CMS fee schedule revision
+Annual Wellness Visit,G0439,Preventive,220,2025-01-01,1,true,BillingDirector,220,
+COVID PCR Test,87635,Diagnostic Lab,45,2025-04-01,3,true,BillingDirector,120,LLM believes COVID PCR reimbursement is $120 (public health emergency rate) — PHE ended; CMS reduced rate to $45 in April 2025
+Flu Vaccine Administration,90686,Immunization,28,2025-01-01,1,true,BillingDirector,28,
+Telehealth Consult,99213-95,Telehealth,65,2024-01-01,1,false,BillingDirector,,
+COVID PCR Test,87635,Diagnostic Lab,120,2024-01-01,2,false,BillingDirector,,

@@ -1,0 +1,9 @@
+code,description,status,fiscal_year,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+E11.65,Type 2 diabetes mellitus with hyperglycemia,active,FY2026,2025-10-01,3,true,CMS_ICD10_Committee,active,
+U09.9,Post-COVID-19 condition unspecified,active,FY2026,2025-10-01,2,true,CMS_ICD10_Committee,active,
+M54.50,Low back pain unspecified,deleted,FY2026,2025-10-01,3,true,CMS_ICD10_Committee,active,LLM believes M54.50 is a valid active code — deleted in FY2026 update (Oct 1 2025) and replaced by more specific codes M54.51 M54.58 M54.59
+A41.01,Sepsis due to methicillin susceptible Staphylococcus aureus,active,FY2026,2025-10-01,2,true,CMS_ICD10_Committee,active,
+Z23,Encounter for immunization,active,FY2026,2025-10-01,4,true,CMS_ICD10_Committee,active,
+M54.51,Vertebrogenic low back pain,active,FY2026,2025-10-01,1,true,CMS_ICD10_Committee,deleted,LLM believes M54.51 was deleted — it was newly added in FY2026 as the preferred replacement for the deleted M54.50 unspecified code
+M54.50,Low back pain unspecified,active,FY2025,2024-10-01,2,false,CMS_ICD10_Committee,,
+M54.51,Other low back pain,deleted,FY2025,2024-10-01,1,false,CMS_ICD10_Committee,,

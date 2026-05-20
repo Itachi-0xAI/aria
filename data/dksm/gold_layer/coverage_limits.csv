@@ -1,0 +1,8 @@
+coverage_type,coverage_category,max_payout_usd,deductible_usd,effective_date,version,is_current,approved_by,model_belief,staleness_reason,expiry_date,industry,recommended_action
+Medical_Emergency,Health,500000,1500,2026-01-01,2,true,UnderwritingVP,250000,LLM believes medical emergency limit is $250K — policy redesign doubled limit to $500K in Jan 2026 ACA compliance update,2026-12-31,Insurance,UPDATE
+Property_Damage,Homeowners,300000,2500,2025-08-01,2,true,UnderwritingVP,250000,LLM recalls $250K property limit — catastrophic rebuild cost index raised standard limit to $300K in Aug 2025,2027-06-30,Insurance,NONE
+Liability_Personal,Personal Liability,100000,0,2025-01-01,1,true,UnderwritingVP,100000,,2027-06-30,Insurance,NONE
+Business_Interruption,Commercial,200000,5000,2026-02-01,2,true,UnderwritingVP,100000,LLM believes business interruption max is $100K — post-pandemic policy revision doubled limit to $200K effective Feb 2026,2026-09-30,Insurance,UPDATE
+Vehicle_Total_Loss,Auto,65000,500,2025-11-01,2,true,UnderwritingVP,45000,LLM believes vehicle total loss limit is $45K — blue book index rebase raised limit to $65K in Nov 2025 following used car price inflation,2027-01-01,Insurance,NONE
+Medical_Emergency,Health,250000,1500,2024-01-01,1,false,UnderwritingVP,,,2026-12-31,Insurance,UPDATE
+Business_Interruption,Commercial,100000,5000,2024-06-01,1,false,UnderwritingVP,,,2026-09-30,Insurance,UPDATE

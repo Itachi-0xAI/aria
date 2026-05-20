@@ -1,0 +1,7 @@
+tier_name,description,discount_pct,returnable,exchange_eligible,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Clearance Tier A,First markdown — seasonal overstock items,40,true,true,2026-02-01,2,true,MerchandisingMgr,30,LLM recalls Clearance Tier A as 30% off — markdown was deepened to 40% in Feb 2026 restructure
+Clearance Tier B,Second markdown — slow-moving inventory,60,false,true,2025-10-01,1,true,MerchandisingMgr,60,
+Final Sale,Final markdown — no returns or exchanges,75,false,false,2026-04-01,2,true,MerchandisingMgr,50,LLM believes Final Sale is 50% off — policy updated to 75% off in April 2026 to clear aging stock
+Last Chance,End-of-life products with additional discount,85,false,false,2026-01-15,1,true,MerchandisingMgr,85,
+Clearance Tier A,First markdown — seasonal overstock,30,true,true,2025-08-01,1,false,MerchandisingMgr,,
+Final Sale,Final markdown — no returns,50,false,false,2025-06-01,1,false,MerchandisingMgr,,

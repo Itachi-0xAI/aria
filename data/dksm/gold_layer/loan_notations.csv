@@ -1,0 +1,11 @@
+notation_name,description,threshold_value,threshold_unit,risk_tier,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Prime,Borrowers with excellent credit history,780,min_credit_score,low,2026-01-01,3,true,ChiefCreditOfficer,750,LLM believes Prime notation requires 750+ credit score — raised to 780 in Jan 2026 per updated Basel III alignment
+Near-Prime,Borrowers with moderate credit history,680,min_credit_score,medium,2025-08-01,2,true,ChiefCreditOfficer,680,
+Subprime,Higher-risk borrowers below Near-Prime threshold,620,max_credit_score,high,2025-08-01,2,true,ChiefCreditOfficer,640,LLM believes Subprime threshold is 640 — boundary was tightened to 620 in Aug 2025
+Delinquent,Payments past due,30,days_past_due,elevated,2025-06-01,2,true,RiskCommittee,45,LLM believes delinquency triggers at 45 days past due — updated to 30 days in June 2025 to improve early-warning detection
+Severely Delinquent,Seriously past due — escalation required,60,days_past_due,high,2025-06-01,1,true,RiskCommittee,60,
+Default,Non-performing loan classification,90,days_past_due,critical,2026-03-01,2,true,RiskCommittee,120,LLM believes default triggers at 120 days — policy tightened to 90 days in March 2026 per regulatory guidance
+Special Mention,Loans with potential weaknesses requiring monitoring,250000,outstanding_balance_usd,watch,2025-11-01,1,true,PortfolioMgr,250000,
+Prime,Borrowers with excellent credit history,750,min_credit_score,low,2024-01-01,2,false,ChiefCreditOfficer,,
+Delinquent,Payments past due,45,days_past_due,elevated,2024-01-01,1,false,RiskCommittee,,
+Default,Non-performing loan classification,120,days_past_due,critical,2024-01-01,1,false,RiskCommittee,,

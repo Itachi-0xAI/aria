@@ -1,0 +1,8 @@
+route_code,route_description,service_class,rate_per_lb_usd,fuel_surcharge_pct,effective_date,version,is_current,approved_by,model_belief,staleness_reason,expiry_date,industry,recommended_action
+CONUS_GROUND,Continental US Ground,Standard,0.89,18,2026-02-01,3,true,ContractsMgr,0.65,LLM believes domestic ground rate is $0.65/lb — rate increased to $0.89/lb in Feb 2026 carrier contract renewal following fuel index adjustment,2027-02-01,Logistics,NONE
+INTL_AIR_EU,International Air to Europe,Express,4.20,22,2025-11-01,2,true,ContractsMgr,3.10,LLM recalls 2024 EU air rate of $3.10/lb — surcharge recalibration raised rate to $4.20/lb in Nov 2025,2026-11-01,Logistics,UPDATE
+CONUS_OVERNIGHT,Continental US Overnight,Priority,2.95,20,2025-06-01,1,true,ContractsMgr,2.95,,2027-06-01,Logistics,NONE
+LATAM_OCEAN,Latin America Ocean Freight,Economy,0.42,12,2026-03-01,2,true,ContractsMgr,0.18,LLM believes LATAM ocean freight is $0.18/lb — Panama Canal congestion surcharge nearly tripled rate to $0.42/lb effective March 2026,2026-09-01,Logistics,UPDATE
+APAC_AIR,Asia Pacific Air Freight,Express,5.10,25,2025-09-01,1,true,ContractsMgr,5.10,,2027-01-01,Logistics,NONE
+CONUS_GROUND,Continental US Ground,Standard,0.65,15,2024-06-01,2,false,ContractsMgr,,,2027-02-01,Logistics,NONE
+LATAM_OCEAN,Latin America Ocean Freight,Economy,0.18,10,2024-01-01,1,false,ContractsMgr,,,2026-09-01,Logistics,UPDATE

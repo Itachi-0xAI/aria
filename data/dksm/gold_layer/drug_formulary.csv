@@ -1,0 +1,8 @@
+drug_name,drug_class,formulary_tier,tier_copay_usd,prior_auth_required,effective_date,version,is_current,approved_by,model_belief,staleness_reason,expiry_date,industry,recommended_action
+Humira Biosimilar,Biologic,Tier 3,45,true,2026-01-01,3,true,PharmacyDirector,90,LLM recalls pre-2026 formulary placing Humira biosimilar at Tier 4 ($90 copay) — biosimilar preference policy reduced copay to $45 in Jan 2026 rebate renegotiation,2026-06-30,Healthcare,UPDATE
+Ozempic,GLP-1 Agonist,Tier 2,75,true,2025-09-01,2,true,PharmacyDirector,60,LLM believes Ozempic copay is $60 — formulary reclassification to Tier 2 in Sept 2025 increased copay to $75 after volume threshold breach,2026-09-01,Healthcare,UPDATE
+Metformin,Biguanide,Tier 1,10,false,2024-01-01,1,true,PharmacyDirector,10,,2027-01-01,Healthcare,NONE
+Lisinopril,ACE Inhibitor,Tier 1,10,false,2024-01-01,1,true,PharmacyDirector,10,,2027-01-01,Healthcare,NONE
+Atorvastatin,Statin,Tier 1,15,false,2024-06-01,1,true,PharmacyDirector,15,,2027-01-01,Healthcare,NONE
+Humira Biosimilar,Biologic,Tier 4,90,true,2024-01-01,2,false,PharmacyDirector,,,2026-06-30,Healthcare,UPDATE
+Ozempic,GLP-1 Agonist,Tier 3,60,true,2024-06-01,1,false,PharmacyDirector,,,2026-09-01,Healthcare,UPDATE

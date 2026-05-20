@@ -1,0 +1,42 @@
+mappings:
+  - dbt_model: "fct_customer_segments"
+    domain: "customer_segments"
+    key_entity: "Enterprise"
+    refresh_schedule: "0 2 * * *"
+    owner: "data-team@example.com"
+
+  - dbt_model: "fct_product_catalog"
+    domain: "product_catalog"
+    key_entity: "DataSense Pro"
+    refresh_schedule: "0 3 * * *"
+    owner: "data-team@example.com"
+
+  - dbt_model: "fct_risk_thresholds"
+    domain: "risk_thresholds"
+    key_entity: "Portfolio VaR - High"
+    refresh_schedule: "0 1 * * *"
+    owner: "risk-team@example.com"
+
+  - dbt_model: "fct_drug_formulary"
+    domain: "drug_formulary"
+    key_entity: "Humira Biosimilar"
+    refresh_schedule: "0 4 * * *"
+    owner: "data-team@example.com"
+
+  - dbt_model: "fct_coverage_limits"
+    domain: "coverage_limits"
+    key_entity: "Gold Plan OOP Max"
+    refresh_schedule: "0 5 * * *"
+    owner: "benefits-team@example.com"
+
+  - dbt_model: "fct_carrier_rates"
+    domain: "carrier_rates"
+    key_entity: "CPT 99213 PPO Rate"
+    refresh_schedule: "0 6 1 * *"
+    owner: "network-team@example.com"
+
+  - dbt_model: "fct_coupons"
+    domain: "coupons"
+    key_entity: "Ozempic Copay Card"
+    refresh_schedule: "0 7 * * 1"
+    owner: "pharmacy-team@example.com"

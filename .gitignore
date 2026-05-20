@@ -1,0 +1,77 @@
+# ── Environment & secrets ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+pip-wheel-metadata/
+*.whl
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── ARIA runtime data (generated — not committed) ────────────────────────────
+data/aria_event_bus.jsonl
+data/approval_queue.csv
+data/lci_log.csv
+data/feedback_log.csv
+data/fine_tune_pairs.jsonl
+data/pipeline_log.csv
+data/business_outcomes.csv
+data/notification_log.csv
+data/freshness_schedule_log.csv
+data/dksm/chroma_db/
+data/dksm/probe_cache/
+data/dksm/freshness_schedule_log.csv
+data/dksm/decision_log.csv
+
+# Keep Gold layer seed data and structure (these are demo data, safe to commit)
+!data/dksm/gold_layer/
+!data/dksm/bronze_layer/
+!data/dksm/silver_layer/
+
+# ── Streamlit ─────────────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Test & coverage ───────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ── PDF outputs (generated on demand) ────────────────────────────────────────
+*.pdf
+
+# ── Internal planning documents (private) ────────────────────────────────────
+ROADMAP.md
+.claude/

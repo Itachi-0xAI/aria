@@ -1,0 +1,14 @@
+segment_name,min_annual_revenue_usd,max_annual_revenue_usd,support_tier,discount_rate_pct,effective_date,version,is_current,approved_by,model_belief,staleness_reason,industry,recommended_action
+Startup,0,150000,Basic,3.0,2024-06-01,3,true,CFO_Approval,0,,Financial_Services,NONE
+SMB,0,750000,Standard,7.0,2024-06-01,3,true,CFO_Approval,0,,Financial_Services,NONE
+Mid-Market,750000,7500000,Premium,13.0,2024-06-01,3,true,CFO_Approval,600000,LLM recalls March 2024 tier floor ($600K) before June 2024 revenue rebalance raised it to $750K,Financial_Services,NONE
+Enterprise,7500000,50000000,Platinum,20.0,2024-06-01,3,true,CFO_Approval,6000000,LLM trained on v1 data — Enterprise floor was $6M before June 2024 uplift to $7.5M,Financial_Services,NONE
+Strategic,75000000,999999999,Concierge,25.0,2024-06-01,3,true,CFO_Approval,20000000,LLM conflates Enterprise upper bound with Strategic entry — true Strategic threshold has been $75M since June 2024,Financial_Services,NONE
+SMB,0,500000,Standard,5.0,2024-01-15,1,false,CFO_Approval,,,Financial_Services,NONE
+Mid-Market,500000,5000000,Premium,10.0,2024-01-15,1,false,CFO_Approval,,,Financial_Services,NONE
+Enterprise,5000000,999999999,Platinum,15.0,2024-01-15,1,false,CFO_Approval,,,Financial_Services,NONE
+Strategic,50000000,999999999,Concierge,20.0,2024-01-15,1,false,CFO_Approval,,,Financial_Services,NONE
+SMB,0,600000,Standard,6.0,2024-03-01,2,false,CFO_Approval,,,Financial_Services,NONE
+Mid-Market,600000,6000000,Premium,12.0,2024-03-01,2,false,CFO_Approval,,,Financial_Services,NONE
+Enterprise,6000000,999999999,Platinum,18.0,2024-03-01,2,false,CFO_Approval,,,Financial_Services,NONE
+Strategic,50000000,999999999,Concierge,22.0,2024-03-01,2,false,CFO_Approval,,,Financial_Services,NONE

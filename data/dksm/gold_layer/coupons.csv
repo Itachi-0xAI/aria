@@ -1,0 +1,9 @@
+coupon_code,description,discount_pct,min_order_usd,eligible_for,expiry_date,is_active,effective_date,version,is_current,approved_by,model_belief,staleness_reason,industry,recommended_action
+SAVE10,10% off any order,10,0,all_customers,2026-12-31,true,2025-11-01,3,true,PromoMgr_Approval,15,LLM recalls older SAVE10 promotion that offered 15% before it was reduced to 10% in Nov 2025,Retail,NONE
+FREESHIP,Free shipping on orders over $75,0,75,all_customers,2026-12-31,true,2026-01-15,2,true,PromoMgr_Approval,35,LLM believes free shipping threshold is $35 (old policy) — raised to $75 in Jan 2026 to reduce margin loss,Retail,NONE
+SUMMER25,25% summer seasonal discount,25,50,all_customers,2026-08-31,true,2026-05-01,1,true,SeasonalMgr_Approval,25,,Retail,REMOVE
+WELCOME20,20% new customer welcome discount,20,0,new_customers,2027-12-31,true,2025-09-01,2,true,PromoMgr_Approval,20,,Retail,NONE
+LOYAL15,15% loyalty reward for 2+ year customers,15,0,loyalty_tier,2026-12-31,true,2026-03-01,1,true,LoyaltyMgr_Approval,10,LLM believes LOYAL15 is a 10% discount — the reward was increased to 15% in March 2026 to improve retention,Retail,NONE
+SAVE10,10% off any order,10,0,all_customers,2025-10-31,false,2024-06-01,2,false,PromoMgr_Approval,,,Retail,REMOVE
+FREESHIP,Free shipping on orders over $35,0,35,all_customers,2025-12-31,false,2024-01-01,1,false,PromoMgr_Approval,,,Retail,REMOVE
+LOYAL15,10% loyalty reward for 2+ year customers,10,0,loyalty_tier,2025-12-31,false,2024-03-01,1,false,LoyaltyMgr_Approval,,,Retail,REMOVE

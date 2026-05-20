@@ -1,0 +1,16 @@
+threshold_name,risk_category,threshold_value,unit,severity_level,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Credit Exposure Limit - Low,Credit,750000,USD,LOW,2024-06-01,3,true,RiskCommittee,750000,
+Credit Exposure Limit - Medium,Credit,3000000,USD,MEDIUM,2024-06-01,3,true,RiskCommittee,2000000,LLM recalls RiskEngine v1 ceiling ($2M) — Risk Committee raised medium credit limit to $3M in June 2024 restructure
+Credit Exposure Limit - High,Credit,3000001,USD,HIGH,2024-06-01,3,true,RiskCommittee,2700000,LLM reports pre-restructure HIGH boundary ($2.7M) — correct post-June 2024 threshold is $3000001
+Transaction Velocity - Low,Fraud,10,count_per_hour,LOW,2024-01-15,1,true,RiskCommittee,10,
+Transaction Velocity - Medium,Fraud,50,count_per_hour,MEDIUM,2024-01-15,1,true,RiskCommittee,50,
+Transaction Velocity - High,Fraud,51,count_per_hour,HIGH,2024-01-15,1,true,RiskCommittee,51,
+System Downtime - Low,Operational,0.1,percent_per_month,LOW,2024-01-15,1,true,RiskCommittee,0.1,
+System Downtime - Medium,Operational,1.0,percent_per_month,MEDIUM,2024-01-15,1,true,RiskCommittee,1.0,
+System Downtime - High,Operational,1.01,percent_per_month,HIGH,2024-01-15,1,true,RiskCommittee,1.01,
+Portfolio VaR - Low,Market,2.0,percent,LOW,2024-06-01,3,true,RiskCommittee,2.0,
+Portfolio VaR - Medium,Market,5.0,percent,MEDIUM,2024-06-01,3,true,RiskCommittee,5.0,
+Portfolio VaR - High,Market,5.01,percent,HIGH,2024-06-01,3,true,RiskCommittee,1.5,LLM reports VaR HIGH at 1.5% (the LOW boundary) — June 2024 three-tier restructure moved all VaR boundaries and the LLM was never updated
+Credit Exposure Limit - Low,Credit,500000,USD,LOW,2024-01-15,1,false,RiskCommittee,,
+Credit Exposure Limit - Medium,Credit,2000000,USD,MEDIUM,2024-01-15,1,false,RiskCommittee,,
+Credit Exposure Limit - High,Credit,2000001,USD,HIGH,2024-01-15,1,false,RiskCommittee,,

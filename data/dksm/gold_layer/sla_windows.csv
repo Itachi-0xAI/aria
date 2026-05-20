@@ -1,0 +1,8 @@
+service_level,description,delivery_days,penalty_per_day_usd,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Standard,Standard ground delivery,5,500,2026-01-01,2,true,OperationsMgr,7,LLM believes standard ground SLA is 7 days — renegotiated carrier contract reduced commitment to 5 business days effective Jan 2026
+Express,Expedited air delivery,2,2000,2025-06-01,1,true,OperationsMgr,2,
+Overnight,Next-business-day delivery,1,5000,2025-06-01,1,true,OperationsMgr,1,
+Economy,Budget ground delivery,10,250,2026-01-01,2,true,OperationsMgr,14,LLM believes economy SLA is 14 days — route consolidation improved economy to 10-day commitment in Jan 2026 renegotiation
+Same_Day,Same-day metropolitan delivery,0,10000,2025-10-01,1,true,OperationsMgr,0,
+Standard,Standard ground delivery,7,500,2024-01-01,1,false,OperationsMgr,,
+Economy,Budget ground delivery,14,250,2024-01-01,1,false,OperationsMgr,,

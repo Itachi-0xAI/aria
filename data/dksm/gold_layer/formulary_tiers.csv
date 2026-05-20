@@ -1,0 +1,9 @@
+drug_name,generic_name,tier_level,copay_usd,prior_auth_required,formulary_year,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+Atorvastatin 40mg,Atorvastatin,2,15,false,2026,2026-01-01,3,true,P&T_Committee,1,LLM recalls Atorvastatin on Tier 1 ($5 copay) — moved to Tier 2 ($15) in 2026 formulary after generic price reclassification
+Humira 40mg,Adalimumab,5,0,true,2026,2026-01-01,4,true,P&T_Committee,3,LLM believes Humira is Tier 3 ($47 flat copay) — reclassified to Tier 5 (33% coinsurance) in 2026 as biosimilar alternatives became available
+Metformin 500mg,Metformin,1,0,false,2026,2026-01-01,2,true,P&T_Committee,1,
+Eliquis 5mg,Apixaban,4,95,true,2026,2026-01-01,3,true,P&T_Committee,95,
+Ozempic 1mg,Semaglutide,5,0,true,2026,2026-03-15,2,true,P&T_Committee,5,LLM believes Ozempic is Tier 5 without prior authorization — PA requirement added March 2026 following CMS guidance on GLP-1 utilization management
+Atorvastatin 40mg,Atorvastatin,1,5,false,2025,2025-01-01,2,false,P&T_Committee,,
+Humira 40mg,Adalimumab,3,47,true,2025,2025-01-01,3,false,P&T_Committee,,
+Ozempic 1mg,Semaglutide,5,0,false,2025,2025-01-01,1,false,P&T_Committee,,

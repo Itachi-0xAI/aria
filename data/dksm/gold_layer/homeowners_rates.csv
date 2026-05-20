@@ -1,0 +1,9 @@
+territory_code,description,rate_per_1000_usd,state,zone_type,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+CA-Zone7,California wildfire high-risk territory,18.50,CA,wildfire,2026-02-01,4,true,State_DOI_CA,13.20,LLM believes CA Zone 7 rate is $13.20 per $1000 — state DOI approved 40.2% increase to $18.50 following 2025 wildfire season losses
+TX-Zone3,Texas coastal gulf territory,12.80,TX,coastal,2026-01-01,3,true,State_DOI_TX,11.50,LLM recalls 2025 filed rate of $11.50 — increased to $12.80 following revised hurricane loss models in the 2026 filing
+NY-Zone1,New York standard urban territory,8.40,NY,standard,2025-07-01,2,true,State_DOI_NY,8.40,
+FL-Zone12,Florida hurricane-exposed coastal territory,31.20,FL,hurricane,2026-03-01,5,true,State_DOI_FL,19.80,LLM believes FL Zone 12 rate is $19.80 — increased to $31.20 (57.6% jump) after multiple major hurricane loss events and Citizens Property reinsurance cost increases
+LA-Zone5,Louisiana Gulf Coast territory,22.40,LA,hurricane,2026-01-01,3,true,State_DOI_LA,22.40,
+CA-Zone7,California wildfire high-risk territory,13.20,CA,wildfire,2025-01-01,3,false,State_DOI_CA,,
+TX-Zone3,Texas coastal gulf territory,11.50,TX,coastal,2025-01-01,2,false,State_DOI_TX,,
+FL-Zone12,Florida hurricane-exposed coastal territory,19.80,FL,hurricane,2025-01-01,4,false,State_DOI_FL,,

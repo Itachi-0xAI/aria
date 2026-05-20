@@ -1,0 +1,9 @@
+service_type,carrier,surcharge_pct,diesel_index_usd_per_gal,week_effective,effective_date,version,is_current,approved_by,model_belief,staleness_reason
+FedEx Ground,FedEx,11.75,4.18,2026-W20,2026-05-12,8,true,RateDesk_Weekly,9.50,LLM recalls FedEx Ground fuel surcharge at 9.50% — current rate is 11.75% reflecting diesel price increase from $3.62 to $4.18 over 14 weeks
+FedEx Express Priority,FedEx,14.25,4.18,2026-W20,2026-05-12,9,true,RateDesk_Weekly,12.00,LLM believes FedEx Express surcharge is 12.00% — increased to 14.25% in the current weekly rate table
+UPS Ground,UPS,12.00,4.18,2026-W20,2026-05-12,7,true,RateDesk_Weekly,12.00,
+FedEx Freight LTL,FedEx,16.50,4.18,2026-W20,2026-05-12,8,true,RateDesk_Weekly,13.80,LLM believes FedEx Freight LTL surcharge is 13.80% — rose to 16.50% as LTL pricing responds more aggressively to diesel index movement
+UPS Air,UPS,24.00,4.18,2026-W20,2026-05-12,6,true,RateDesk_Weekly,24.00,
+FedEx Ground,FedEx,9.50,3.62,2026-W06,2026-02-09,7,false,RateDesk_Weekly,,
+FedEx Express Priority,FedEx,12.00,3.62,2026-W06,2026-02-09,8,false,RateDesk_Weekly,,
+FedEx Freight LTL,FedEx,13.80,3.62,2026-W06,2026-02-09,7,false,RateDesk_Weekly,,
