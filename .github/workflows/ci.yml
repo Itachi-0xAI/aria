@@ -25,11 +25,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}-${{ matrix.python-version }}
           restore-keys: ${{ runner.os }}-pip-
 
+      - name: Install system dependencies
+        run: sudo apt-get install -y build-essential
+
       - name: Install dependencies
-        run: pip install -r requirements.txt pytest
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt pytest
+        timeout-minutes: 10
 
       - name: Smoke test — import aria modules
         run: |
