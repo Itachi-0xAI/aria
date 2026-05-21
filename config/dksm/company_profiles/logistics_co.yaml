@@ -1,0 +1,67 @@
+company:
+  id: logistics_co
+  display_name: "Logistics"
+  contact_email: "ops-data@logistics.example"
+
+domains:
+  carrier_rates:
+    display_name: "Carrier Rates"
+    description: "Per-pound shipping rates by route and service class"
+    probe_schedule: hourly
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "route_code"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "route_code"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/carrier_rates.csv"
+        key_column: "route_code"
+        value_column: "rate_per_lb_usd"
+    probe_questions:
+      - "What is the current ground shipping rate per pound for domestic continental US routes?"
+      - "What does international air freight to Europe cost per pound?"
+      - "What is the per-pound rate for domestic overnight shipping?"
+      - "What is the ocean freight rate per pound for Latin America routes?"
+    staleness_thresholds:
+      fresh: 0.91
+      stale: 0.74
+      critical: 0.52
+    business_impact:
+      wrong_rate_avg_cost_usd: 21000
+      decisions_per_month: 4200
+
+  sla_windows:
+    display_name: "SLA Delivery Windows"
+    description: "Contracted delivery day commitments per service level"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "service_level"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "service_level"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/sla_windows.csv"
+        key_column: "service_level"
+        value_column: "delivery_days"
+    probe_questions:
+      - "How many business days is the standard ground delivery SLA?"
+      - "What is the committed delivery window for express shipping?"
+      - "How quickly must overnight shipments be delivered?"
+      - "What is the delivery timeframe for economy shipping service?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.75
+      critical: 0.55
+    business_impact:
+      wrong_sla_avg_cost_usd: 15000
+      decisions_per_month: 2100

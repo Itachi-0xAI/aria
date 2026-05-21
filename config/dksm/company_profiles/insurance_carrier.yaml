@@ -1,0 +1,71 @@
+company:
+  id: insurance_carrier
+  display_name: "Insurance Carrier"
+  contact_email: "actuarial-ops@insurancecarrier.example"
+
+domains:
+  wc_loss_costs:
+    display_name: "Workers Comp Loss Costs"
+    description: "NCCI classification code loss cost rates per $100 payroll — filed annually per state, effective dates vary Jan 1 or Apr 1"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "class_code"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "class_code"
+        quality_threshold: 0.96
+      gold:
+        path: "data/gold_layer/wc_loss_costs.csv"
+        key_column: "class_code"
+        value_column: "loss_cost_per_100"
+    probe_questions:
+      - "What is the NCCI loss cost rate per $100 of payroll for class code 5403 (carpentry)?"
+      - "What loss cost applies to clerical workers under NCCI code 8810?"
+      - "What is the current loss cost rate for plumbers under class code 5183?"
+      - "What NCCI class code applies to software developers and what is its loss cost?"
+      - "Has the loss cost for roofing contractors (code 5551) increased or decreased in the latest filing?"
+      - "What is the experience modification factor threshold for a class code 5403 policy to qualify for premium credit?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.76
+      critical: 0.56
+    business_impact:
+      wrong_rate_avg_cost_usd: 18000
+      decisions_per_month: 1400
+
+  homeowners_rates:
+    display_name: "Homeowners Filed Rates"
+    description: "State-filed homeowners premium rates per $1,000 of coverage by territory — continuous filing cycle, 10-40% changes in catastrophe-prone markets"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "territory_code"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "territory_code"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/homeowners_rates.csv"
+        key_column: "territory_code"
+        value_column: "rate_per_1000_usd"
+    probe_questions:
+      - "What is the approved homeowners base rate per $1,000 of coverage in California wildfire Zone 7?"
+      - "What is the filed premium rate for Texas coastal territory Zone 3?"
+      - "Has the Florida homeowners rate for hurricane-exposed Zone 12 changed in the last filing cycle?"
+      - "What is the current per-$1,000 coverage rate in New York Zone 1?"
+      - "What is the rate increase percentage approved for California Zone 7 after the most recent wildfire season?"
+      - "What territory factor applies to Louisiana Gulf Coast Zone 5 policies?"
+    staleness_thresholds:
+      fresh: 0.90
+      stale: 0.72
+      critical: 0.50
+    business_impact:
+      wrong_quote_avg_cost_usd: 9500
+      decisions_per_month: 2800

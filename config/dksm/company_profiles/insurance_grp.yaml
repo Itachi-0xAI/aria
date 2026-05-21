@@ -1,0 +1,67 @@
+company:
+  id: insurance_grp
+  display_name: "Insurance"
+  contact_email: "actuarial-data@insurance.example"
+
+domains:
+  premium_tables:
+    display_name: "Premium Rate Tables"
+    description: "Monthly premium rates by policy type and risk class"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "policy_type"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "policy_type"
+        quality_threshold: 0.96
+      gold:
+        path: "data/gold_layer/premium_tables.csv"
+        key_column: "policy_type"
+        value_column: "monthly_premium_usd"
+    probe_questions:
+      - "What is the monthly premium for a standard auto insurance policy?"
+      - "How much does a standard homeowners policy cost per month?"
+      - "What is the monthly premium for a 20-year term life insurance policy?"
+      - "What does a $1M personal umbrella policy cost per month?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.76
+      critical: 0.56
+    business_impact:
+      wrong_premium_avg_cost_usd: 33000
+      decisions_per_month: 2600
+
+  coverage_limits:
+    display_name: "Coverage Limits"
+    description: "Maximum payout limits per coverage type and policy class"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "coverage_type"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "coverage_type"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/coverage_limits.csv"
+        key_column: "coverage_type"
+        value_column: "max_payout_usd"
+    probe_questions:
+      - "What is the maximum medical emergency payout under a standard policy?"
+      - "What is the property damage coverage limit for standard homeowners?"
+      - "What is the personal liability coverage limit?"
+      - "What is the maximum business interruption payout?"
+    staleness_thresholds:
+      fresh: 0.93
+      stale: 0.78
+      critical: 0.58
+    business_impact:
+      wrong_limit_avg_cost_usd: 185000
+      decisions_per_month: 420

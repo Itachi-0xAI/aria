@@ -1,0 +1,38 @@
+company:
+  id: financial_co
+  display_name: "FinancialCo"
+  contact_email: "risk-ops@financialco.example"
+
+domains:
+  loan_notations:
+    display_name: "Loan Notations"
+    description: "Credit notation rules, delinquency thresholds, and default classification criteria"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "notation_name"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "notation_name"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/loan_notations.csv"
+        key_column: "notation_name"
+        value_column: "threshold_value"
+    probe_questions:
+      - "What minimum credit score is required for a Prime credit notation?"
+      - "How many days past due triggers a Delinquent notation on a loan?"
+      - "At what number of days does a loan receive a Default notation?"
+      - "What credit score separates a Near-Prime borrower from a Subprime classification?"
+      - "What is the days-past-due threshold that classifies a loan as Severely Delinquent?"
+      - "At what outstanding balance does a loan notation escalate to a Special Mention?"
+    staleness_thresholds:
+      fresh: 0.95
+      stale: 0.82
+      critical: 0.62
+    business_impact:
+      wrong_notation_avg_cost_usd: 95000
+      decisions_per_month: 680

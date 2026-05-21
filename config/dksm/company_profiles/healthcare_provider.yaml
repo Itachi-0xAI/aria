@@ -1,0 +1,71 @@
+company:
+  id: healthcare_provider
+  display_name: "Healthcare Provider"
+  contact_email: "data-quality@healthcareprovider.example"
+
+domains:
+  formulary_tiers:
+    display_name: "Drug Formulary Tiers"
+    description: "Medicare Part D formulary tier placement and out-of-pocket cost per drug — updated annually Jan 1 with permitted mid-year exception changes"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "drug_name"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "drug_name"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/formulary_tiers.csv"
+        key_column: "drug_name"
+        value_column: "tier_level"
+    probe_questions:
+      - "What formulary tier is Atorvastatin 40mg assigned to under the standard Medicare Part D plan?"
+      - "What is the patient copay for Humira 40mg under a preferred formulary tier?"
+      - "Is Metformin 500mg covered on Tier 1 of the standard formulary?"
+      - "What tier is Eliquis 5mg placed on and what is the associated cost-sharing?"
+      - "Does Ozempic 1mg require prior authorization under the current formulary?"
+      - "What is the out-of-pocket cost for a Tier 5 specialty drug at the point of sale?"
+    staleness_thresholds:
+      fresh: 0.93
+      stale: 0.78
+      critical: 0.58
+    business_impact:
+      wrong_tier_avg_cost_usd: 380
+      decisions_per_month: 42000
+
+  icd10_codes:
+    display_name: "ICD-10 Diagnosis Codes"
+    description: "Active ICD-10-CM diagnosis code validity and mapping — updated annually Oct 1 (FY2026 added 614 codes, deleted 28)"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "code"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "code"
+        quality_threshold: 0.99
+      gold:
+        path: "data/gold_layer/icd10_codes.csv"
+        key_column: "code"
+        value_column: "status"
+    probe_questions:
+      - "Is ICD-10 code E11.65 valid for Type 2 diabetes with hyperglycemia?"
+      - "What is the correct ICD-10 code for long COVID post-acute sequelae?"
+      - "Has code M54.50 for low back pain been superseded or deleted in the FY2026 update?"
+      - "What ICD-10-CM code should be used for severe sepsis with acute organ dysfunction?"
+      - "Is Z23 still the correct code for vaccination encounter in the current code set?"
+      - "What is the active code for post-COVID condition unspecified after the FY2026 update?"
+    staleness_thresholds:
+      fresh: 0.95
+      stale: 0.80
+      critical: 0.60
+    business_impact:
+      wrong_code_avg_cost_usd: 1200
+      decisions_per_month: 85000

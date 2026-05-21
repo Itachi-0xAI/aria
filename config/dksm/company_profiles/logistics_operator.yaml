@@ -1,0 +1,71 @@
+company:
+  id: logistics_operator
+  display_name: "Logistics Operator"
+  contact_email: "pricing-ops@logisticsoperator.example"
+
+domains:
+  fuel_surcharges:
+    display_name: "Carrier Fuel Surcharges"
+    description: "Weekly fuel surcharge percentages by service type — indexed to DOE/EIA diesel price, updated every Monday, 11+ changes in 30 months"
+    probe_schedule: hourly
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "service_type"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "service_type"
+        quality_threshold: 0.98
+      gold:
+        path: "data/gold_layer/fuel_surcharges.csv"
+        key_column: "service_type"
+        value_column: "surcharge_pct"
+    probe_questions:
+      - "What is the current fuel surcharge percentage for FedEx Ground shipments?"
+      - "What fuel surcharge applies to FedEx Express Priority shipments this week?"
+      - "What is the UPS Ground fuel surcharge rate currently in effect?"
+      - "What is the fuel surcharge for FedEx Freight LTL shipments?"
+      - "At what diesel price per gallon does the FedEx Ground surcharge increase by 0.25%?"
+      - "What was the UPS air freight fuel surcharge in the most recent weekly update?"
+    staleness_thresholds:
+      fresh: 0.96
+      stale: 0.85
+      critical: 0.70
+    business_impact:
+      margin_error_per_1000_shipments_usd: 1800
+      decisions_per_month: 40000
+
+  das_zones:
+    display_name: "Delivery Area Surcharges"
+    description: "ZIP code tier assignments for Delivery Area Surcharges (Standard/Extended/Remote) — revised annually Dec 22, expanded in 2026 update"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "surcharge_type"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "surcharge_type"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/das_zones.csv"
+        key_column: "surcharge_type"
+        value_column: "surcharge_usd"
+    probe_questions:
+      - "What is the delivery area surcharge for a commercial address in a Standard DAS ZIP code?"
+      - "How much is the Extended Delivery Area Surcharge for residential deliveries?"
+      - "What surcharge applies to Remote Area deliveries under the current UPS rate card?"
+      - "What is the additional handling surcharge for packages over 50 pounds?"
+      - "What delivery surcharge applies to Alaska and Hawaii residential addresses?"
+      - "What is the difference in DAS charge between a Standard and Extended DAS ZIP code?"
+    staleness_thresholds:
+      fresh: 0.93
+      stale: 0.78
+      critical: 0.58
+    business_impact:
+      unrecovered_cost_per_week_usd: 3200
+      decisions_per_month: 22000

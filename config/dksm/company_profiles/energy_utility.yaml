@@ -1,0 +1,71 @@
+company:
+  id: energy_utility
+  display_name: "Energy Utility"
+  contact_email: "rates-analytics@energyutility.example"
+
+domains:
+  gas_cost_adjustment:
+    display_name: "Gas Cost Adjustment Rates"
+    description: "Quarterly commodity pass-through GCA rates per Mcf by customer class — PUC-ordered quarterly filings, Q1 2026 jumped 18.5% in a single quarter"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "customer_class"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "customer_class"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/gas_cost_adjustment.csv"
+        key_column: "customer_class"
+        value_column: "gca_rate_per_mcf"
+    probe_questions:
+      - "What is the current Gas Cost Adjustment rate per Mcf for residential customers?"
+      - "What GCA rate per Mcf applies to commercial customers in the current quarter?"
+      - "What is the industrial customer gas cost adjustment for Q2 2026?"
+      - "By how much did the residential GCA rate increase from Q4 2025 to Q1 2026?"
+      - "What is the current all-in natural gas rate for a residential customer including the GCA?"
+      - "What wholesale gas price triggers the next GCA rate step-up under the current PUC formula?"
+    staleness_thresholds:
+      fresh: 0.93
+      stale: 0.78
+      critical: 0.58
+    business_impact:
+      wrong_estimate_avg_cost_usd: 520
+      decisions_per_month: 18000
+
+  tou_rates:
+    display_name: "Time-of-Use Electricity Rates"
+    description: "Peak and off-peak kWh rates under residential and commercial TOU tariffs — structural changes in Mar 2026 lowered per-kWh delta, breaking prior load-shift recommendations"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "rate_period"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "rate_period"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/tou_rates.csv"
+        key_column: "rate_period"
+        value_column: "rate_per_kwh"
+    probe_questions:
+      - "What is the current on-peak electricity rate per kWh for residential TOU customers?"
+      - "What is the off-peak rate per kWh for residential customers under the TOU-D tariff?"
+      - "What is the peak-period electricity rate for commercial customers during summer months?"
+      - "What hours define the on-peak period under the current residential TOU schedule?"
+      - "What is the new base services monthly charge introduced in the March 2026 rate restructure?"
+      - "By how much did the per-kWh peak rate decrease after the March 2026 structural rate change?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.76
+      critical: 0.56
+    business_impact:
+      wrong_shift_avg_cost_usd: 210
+      decisions_per_month: 55000

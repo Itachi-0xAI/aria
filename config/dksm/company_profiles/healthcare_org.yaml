@@ -1,0 +1,68 @@
+company:
+  id: healthcare_org
+  display_name: "Healthcare"
+  contact_email: "data-ops@healthcare.example"
+
+domains:
+  drug_formulary:
+    display_name: "Drug Formulary"
+    description: "Formulary tier assignments and patient copay amounts per approved drug"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "drug_name"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "drug_name"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/drug_formulary.csv"
+        key_column: "drug_name"
+        value_column: "tier_copay_usd"
+    probe_questions:
+      - "What is the patient copay for Humira biosimilar under a standard formulary plan?"
+      - "What tier is Ozempic assigned to and what is the copay amount?"
+      - "How much does a patient pay out of pocket per fill for Metformin?"
+      - "What is the formulary copay for Lisinopril 10mg?"
+      - "Is Humira biosimilar preferred or non-preferred on the formulary?"
+    staleness_thresholds:
+      fresh: 0.93
+      stale: 0.78
+      critical: 0.58
+    business_impact:
+      wrong_copay_avg_cost_usd: 38000
+      decisions_per_month: 1800
+
+  billing_codes:
+    display_name: "Billing & Reimbursement Codes"
+    description: "CPT code reimbursement rates for procedures and telehealth services"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "procedure_name"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "procedure_name"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/billing_codes.csv"
+        key_column: "procedure_name"
+        value_column: "reimbursement_rate_usd"
+    probe_questions:
+      - "What is the Medicare reimbursement rate for a telehealth consultation?"
+      - "How much does CMS reimburse for an MRI brain scan with contrast?"
+      - "What is the reimbursement rate for an annual wellness visit?"
+      - "What does CMS currently reimburse for a COVID PCR diagnostic test?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.76
+      critical: 0.56
+    business_impact:
+      wrong_billing_avg_cost_usd: 62000
+      decisions_per_month: 950

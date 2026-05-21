@@ -1,0 +1,249 @@
+domains:
+  customer_segments:
+    display_name: "Customer Segments"
+    description: "Business rules for customer classification by revenue tier"
+    medallion:
+      bronze:
+        path: "data/bronze_layer/customer_segments_bronze.csv"
+        key_column: "segment_id"
+        source_systems: ["CRM_v2", "Salesforce", "HubSpot"]
+      silver:
+        path: "data/silver_layer/customer_segments_silver.csv"
+        key_column: "segment_id"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/customer_segments.csv"
+        key_column: "segment_name"
+        value_column: "min_annual_revenue_usd"
+    probe_questions:
+      - "What is the minimum annual revenue threshold for a customer to be classified as Enterprise tier?"
+      - "What revenue range defines a Mid-Market customer?"
+      - "At what annual revenue does a customer qualify for the Platinum support tier?"
+      - "What discount rate do Enterprise customers receive?"
+      - "What is the revenue ceiling that separates SMB from Mid-Market customers?"
+      - "When does a customer graduate from Mid-Market to Enterprise classification?"
+      - "What support tier comes with Strategic account status?"
+      - "What annual revenue qualifies a customer for the Concierge support tier?"
+    staleness_thresholds:
+      fresh: 0.95
+      stale: 0.85
+      critical: 0.75
+    business_impact:
+      wrong_classification_avg_cost_usd: 125000
+      decisions_per_month: 450
+
+  product_catalog:
+    display_name: "Product Catalog"
+    description: "Current product pricing, discount eligibility, and availability"
+    medallion:
+      bronze:
+        path: "data/bronze_layer/product_catalog_bronze.csv"
+        key_column: "product_id"
+        source_systems: ["ERP_v3", "Shopify", "ERP_v4"]
+      silver:
+        path: "data/silver_layer/product_catalog_silver.csv"
+        key_column: "product_id"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/product_catalog.csv"
+        key_column: "product_name"
+        value_column: "unit_price_usd"
+    probe_questions:
+      - "What is the current price of DataSense Pro?"
+      - "How much does DataSense Enterprise cost per year?"
+      - "Is RiskGuard Basic eligible for volume discounts?"
+      - "What is the price difference between RiskGuard Basic and RiskGuard Advanced?"
+      - "What is the launch price of ComplianceTrack?"
+      - "Which products in the Analytics category are discount-eligible?"
+      - "What is the price of InsightFlow Core?"
+      - "How much does DataSense Starter cost?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.75
+      critical: 0.55
+    business_impact:
+      wrong_pricing_avg_cost_usd: 45000
+      decisions_per_month: 1200
+
+  risk_thresholds:
+    display_name: "Risk Thresholds"
+    description: "Enterprise risk management thresholds for credit, fraud, operational and market risk"
+    medallion:
+      bronze:
+        path: "data/bronze_layer/risk_thresholds_bronze.csv"
+        key_column: "threshold_id"
+        source_systems: ["RiskEngine_v1", "RiskEngine_v2"]
+      silver:
+        path: "data/silver_layer/risk_thresholds_silver.csv"
+        key_column: "threshold_id"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/risk_thresholds.csv"
+        key_column: "threshold_name"
+        value_column: "threshold_value"
+    probe_questions:
+      - "What USD amount marks the boundary between low and medium credit exposure risk?"
+      - "How many transactions per hour triggers a medium fraud alert?"
+      - "What percentage of monthly downtime crosses from medium to high operational risk?"
+      - "What is the credit exposure threshold that classifies a transaction as high risk?"
+      - "At what Portfolio VaR percentage does risk escalate from low to medium?"
+      - "What fraud transaction velocity threshold requires immediate investigation?"
+      - "Above what credit exposure amount should a transaction be flagged as high severity?"
+      - "What is the maximum acceptable Portfolio VaR before high severity risk is triggered?"
+    staleness_thresholds:
+      fresh: 0.95
+      stale: 0.80
+      critical: 0.60
+    business_impact:
+      wrong_assessment_avg_cost_usd: 280000
+      decisions_per_month: 320
+
+  drug_formulary:
+    display_name: "Drug Formulary"
+    description: "Formulary tier assignments, copay amounts, and prior auth requirements by drug"
+    medallion:
+      bronze:
+        path: "data/bronze_layer/drug_formulary_bronze.csv"
+        key_column: "drug_id"
+        source_systems: ["PharmacyDB_v2", "PBM_Feed"]
+      silver:
+        path: "data/silver_layer/drug_formulary_silver.csv"
+        key_column: "drug_id"
+        quality_threshold: 0.98
+      gold:
+        path: "data/dksm/gold_layer/drug_formulary.csv"
+        key_column: "drug_name"
+        value_column: "tier_copay_usd"
+    probe_questions:
+      - "What is the copay for Humira Biosimilar under the current formulary?"
+      - "What formulary tier is Humira Biosimilar assigned to?"
+      - "Does Humira Biosimilar require prior authorization?"
+      - "What is the current copay for Ozempic?"
+      - "What tier is Ozempic on the formulary?"
+      - "What is the copay difference between Tier 1 and Tier 3 drugs?"
+      - "Which biologics require prior authorization on the current formulary?"
+      - "What is the biosimilar preferred copay for Humira under the Jan 2026 rebate policy?"
+    staleness_thresholds:
+      fresh: 0.90
+      stale: 0.70
+      critical: 0.50
+    business_impact:
+      wrong_copay_avg_cost_usd: 18000
+      decisions_per_month: 2400
+
+  coverage_limits:
+    display_name: "Coverage Limits"
+    description: "Health plan coverage limits, out-of-pocket maxima, and benefit caps by plan tier"
+    medallion:
+      bronze:
+        path: "data/bronze_layer/coverage_limits_bronze.csv"
+        key_column: "limit_id"
+        source_systems: ["BenefitsEngine_v2", "PlanAdmin_Feed"]
+      silver:
+        path: "data/silver_layer/coverage_limits_silver.csv"
+        key_column: "limit_id"
+        quality_threshold: 0.97
+      gold:
+        path: "data/gold_layer/coverage_limits.csv"
+        key_column: "limit_name"
+        value_column: "limit_amount_usd"
+    probe_questions:
+      - "What is the annual out-of-pocket maximum for a Gold plan member?"
+      - "What is the lifetime benefit cap for inpatient mental health coverage?"
+      - "What is the in-network deductible for a Silver plan?"
+      - "Does the Platinum plan have a separate deductible for prescription drugs?"
+      - "What is the out-of-network out-of-pocket maximum for a Bronze plan?"
+      - "What is the maximum covered amount for durable medical equipment per year?"
+      - "At what point does the catastrophic cap apply for Gold plan members?"
+      - "What is the per-admission coinsurance limit for inpatient hospital stays?"
+    staleness_thresholds:
+      fresh: 0.93
+      stale: 0.78
+      critical: 0.60
+    business_impact:
+      wrong_limit_avg_cost_usd: 95000
+      decisions_per_month: 680
+
+  carrier_rates:
+    display_name: "Carrier Rates"
+    description: "Insurance carrier reimbursement rates and fee schedules by procedure and network tier"
+    medallion:
+      bronze:
+        path: "data/bronze_layer/carrier_rates_bronze.csv"
+        key_column: "rate_id"
+        source_systems: ["FeeSchedule_v3", "CMS_Feed", "NetworkDB"]
+      silver:
+        path: "data/silver_layer/carrier_rates_silver.csv"
+        key_column: "rate_id"
+        quality_threshold: 0.96
+      gold:
+        path: "data/gold_layer/carrier_rates.csv"
+        key_column: "procedure_code"
+        value_column: "allowed_amount_usd"
+    probe_questions:
+      - "What is the allowed amount for CPT 99213 under the PPO network?"
+      - "What is the carrier reimbursement rate for a standard MRI without contrast?"
+      - "What fee schedule applies to out-of-network emergency services?"
+      - "What is the allowed amount for a preventive wellness visit under the HMO plan?"
+      - "What is the reimbursement rate for CPT 43239 under the current fee schedule?"
+      - "What percentage of billed charges does the carrier allow for out-of-network lab work?"
+      - "What is the network tier 1 rate for a specialist office visit?"
+      - "What is the carrier rate for ambulance transport per mile?"
+    staleness_thresholds:
+      fresh: 0.91
+      stale: 0.76
+      critical: 0.58
+    business_impact:
+      wrong_rate_avg_cost_usd: 32000
+      decisions_per_month: 3100
+
+  coupons:
+    display_name: "Drug Coupons"
+    description: "Manufacturer copay assistance programs, patient savings cards, and coupon eligibility rules"
+    medallion:
+      bronze:
+        path: "data/bronze_layer/coupons_bronze.csv"
+        key_column: "coupon_id"
+        source_systems: ["CopayAssist_v1", "HubRx_Feed"]
+      silver:
+        path: "data/silver_layer/coupons_silver.csv"
+        key_column: "coupon_id"
+        quality_threshold: 0.93
+      gold:
+        path: "data/gold_layer/coupons.csv"
+        key_column: "drug_name"
+        value_column: "max_savings_usd"
+    probe_questions:
+      - "What is the maximum monthly savings available on the Ozempic copay card?"
+      - "Is the Humira copay card eligible for patients with government insurance?"
+      - "What is the income eligibility threshold for the Eliquis patient assistance program?"
+      - "How much can a patient save per fill using the Jardiance savings card?"
+      - "Does the Keytruda copay program cover Medicare Part D enrollees?"
+      - "What is the maximum annual benefit under the Dupixent MyWay copay program?"
+      - "What is the out-of-pocket cap per prescription using the Xeljanz copay coupon?"
+      - "Which biosimilar copay cards are accepted at specialty pharmacies?"
+    staleness_thresholds:
+      fresh: 0.90
+      stale: 0.72
+      critical: 0.52
+    business_impact:
+      wrong_coupon_avg_cost_usd: 4200
+      decisions_per_month: 5800
+
+global_settings:
+  model: "claude-sonnet-4-6"
+  grader_model: "claude-haiku-4-5-20251001"
+  max_crag_retries: 2
+  probe_cache_ttl_hours: 24
+  vector_store_path: "data/chroma_db/"
+  embedding_model: "all-MiniLM-L6-v2"
+  hybrid_search_weights:
+    dense: 0.6
+    bm25: 0.4
+  mcp_server:
+    host: "0.0.0.0"
+    port: 8765
+  company_profiles:
+    enabled: true
+    profiles_dir: "config/company_profiles"
+    scheduler_tick_seconds: 60

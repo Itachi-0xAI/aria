@@ -1,0 +1,70 @@
+company:
+  id: retail_corp
+  display_name: "RetailCorp"
+  contact_email: "data-team@retailcorp.example"
+
+domains:
+  coupons:
+    display_name: "Coupon Rules"
+    description: "Active coupon codes, discount percentages, and eligibility conditions"
+    probe_schedule: hourly          # hourly | daily | weekly | manual
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""                    # no bronze feed yet — Phase 2 connector
+        key_column: "coupon_code"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "coupon_code"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/coupons.csv"
+        key_column: "coupon_code"
+        value_column: "discount_pct"
+    probe_questions:
+      - "What percentage discount does the coupon code SAVE10 give customers?"
+      - "What is the minimum order value required to use the FREESHIP coupon?"
+      - "Is the SUMMER25 coupon still active and what discount does it offer?"
+      - "What is the discount percentage for the WELCOME20 new customer coupon?"
+      - "Which coupon codes are currently valid for existing customers?"
+      - "What discount does the loyalty coupon LOYAL15 provide?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.75
+      critical: 0.55
+    business_impact:
+      wrong_coupon_avg_cost_usd: 12000
+      decisions_per_month: 3200
+
+  clearance:
+    display_name: "Clearance Tiers"
+    description: "Clearance discount tiers, final-sale rules, and markdown schedules"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "tier_name"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "tier_name"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/clearance.csv"
+        key_column: "tier_name"
+        value_column: "discount_pct"
+    probe_questions:
+      - "What percentage discount applies to Clearance Tier A items?"
+      - "What is the markdown percentage for Clearance Tier B products?"
+      - "What discount do Final Sale items receive?"
+      - "Can clearance items be returned or exchanged?"
+      - "What is the additional discount on Last Chance items?"
+    staleness_thresholds:
+      fresh: 0.90
+      stale: 0.72
+      critical: 0.50
+    business_impact:
+      wrong_markdown_avg_cost_usd: 8500
+      decisions_per_month: 900

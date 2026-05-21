@@ -1,0 +1,67 @@
+company:
+  id: hospitality_grp
+  display_name: "Hospitality"
+  contact_email: "revenue-data@hospitality.example"
+
+domains:
+  rate_plans:
+    display_name: "Room Rate Plans"
+    description: "Base nightly room rates by plan type and room category"
+    probe_schedule: hourly
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "rate_plan"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "rate_plan"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/rate_plans.csv"
+        key_column: "rate_plan"
+        value_column: "base_rate_usd"
+    probe_questions:
+      - "What is the standard nightly room rate for a base category room?"
+      - "What does a deluxe suite cost per night at the base rate?"
+      - "What is the negotiated corporate nightly rate?"
+      - "What is the all-inclusive event package rate per night?"
+    staleness_thresholds:
+      fresh: 0.91
+      stale: 0.74
+      critical: 0.54
+    business_impact:
+      wrong_rate_avg_cost_usd: 9500
+      decisions_per_month: 5800
+
+  loyalty_tiers:
+    display_name: "Loyalty Tier Benefits"
+    description: "Points earned per dollar spent by loyalty membership tier"
+    probe_schedule: daily
+    notify_on_stale: true
+    medallion:
+      bronze:
+        path: ""
+        key_column: "tier_name"
+        source_systems: []
+      silver:
+        path: ""
+        key_column: "tier_name"
+        quality_threshold: 0.95
+      gold:
+        path: "data/gold_layer/loyalty_tiers.csv"
+        key_column: "tier_name"
+        value_column: "points_per_dollar"
+    probe_questions:
+      - "How many loyalty points does a Silver member earn per dollar spent?"
+      - "What is the points per dollar earning rate for Gold tier members?"
+      - "How many points per dollar do Platinum members receive?"
+      - "What is the Diamond tier points earning rate per dollar?"
+    staleness_thresholds:
+      fresh: 0.92
+      stale: 0.75
+      critical: 0.55
+    business_impact:
+      wrong_tier_avg_cost_usd: 7200
+      decisions_per_month: 3400
