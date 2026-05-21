@@ -382,6 +382,17 @@ aria/
 pytest tests/ -v
 ```
 
+CI runs automatically on every push and PR via GitHub Actions (Python 3.10 + 3.11).
+
+---
+
+## Further Reading
+
+| Document | What's in it |
+|----------|-------------|
+| [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) | Architecture diagrams, module breakdown, event bus schema, data flow, design decisions, known limitations |
+| [ONBOARDING.md](ONBOARDING.md) | Step-by-step demo guide for both use cases, all 7 domains, what works in demo mode vs production |
+
 ---
 
 ## License

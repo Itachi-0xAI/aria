@@ -132,4 +132,4 @@ Three gaps matter most before a production deployment:
 | Gold layer = local CSVs | Can't query live warehouse data | Phase 1 — add Snowflake / BigQuery connector |
 | No real decision log | AVL dollar values are simulated | Phase 1 — wire `business_outcomes.csv` to Salesforce / CRM |
 
-Full timeline, code snippets, and effort estimates: **[ROADMAP.md](ROADMAP.md)**
+For the full system architecture, event bus schema, and design decisions: **[SYSTEM_DESIGN.md](SYSTEM_DESIGN.md)**
