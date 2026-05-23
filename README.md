@@ -371,7 +371,8 @@ aria/
     ├── test_lci.py
     ├── test_pp.py
     ├── test_avl.py
-    └── test_fle.py
+    ├── test_fle.py
+    └── test_user_flows.py           # 18 end-to-end user flow tests (4 flows)
 ```
 
 ---
@@ -383,6 +384,28 @@ pytest tests/ -v
 ```
 
 CI runs automatically on every push and PR via GitHub Actions (Python 3.10 + 3.11).
+
+### Test suites
+
+| File | Tests | What it covers |
+|---|---|---|
+| `test_event_bus.py` | — | Event emission, subscription, JSONL persistence |
+| `test_lci.py` | 3 | Context injection, TTL expiry, pending state |
+| `test_pp.py` | 4 | Pipeline scan, health summary, remediation approval gates |
+| `test_avl.py` | 4 | Exposure reports, recovery value, value summary keys |
+| `test_fle.py` | — | Feedback routing, correction signals |
+| `test_user_flows.py` | 18 | End-to-end analyst/operator/CFO workflows across all 4 core modules |
+
+### User flow tests — what they cover
+
+`tests/test_user_flows.py` simulates real user workflows against the module layer:
+
+| Flow | Simulates | Tests |
+|---|---|---|
+| **Flow 1 — Staleness scores** | Analyst opening dashboard | Domains configured, FRESH vs CRITICAL scoring |
+| **Flow 2 — Pipeline trace** | Operator tracing a broken pipeline | Scan results, health summary, low/high-risk remediation approval |
+| **Flow 3 — Context injection** | System auto-correcting AI queries | No injection without signal, injection after staleness, TTL expiry |
+| **Flow 4 — CFO value view** | CFO/compliance checking financial impact | Non-negative exposure, EU AI Act categories, recovery value, net ROI |
 
 ---
 

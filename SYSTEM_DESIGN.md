@@ -514,7 +514,56 @@ CRITICAL-severity events and High-risk remediation actions require explicit lead
 
 ---
 
-## 9. Known Limitations / Production Gaps
+## 9. Testing Strategy
+
+### Unit tests (existing)
+
+| Suite | What it tests |
+|---|---|
+| `test_event_bus.py` | Event emission, subscription, JSONL persistence, event ordering |
+| `test_lci.py` | Context injection, TTL expiry, pending state management |
+| `test_pp.py` | Pipeline scan, health summary, remediation approval gate (low vs high risk) |
+| `test_avl.py` | Exposure reports, recovery value, CFO value summary keys, domain coverage |
+| `test_fle.py` | Feedback routing decisions, correction signal handling |
+
+### User flow tests (added — 18 tests)
+
+`tests/test_user_flows.py` tests the system as real users interact with it — no Streamlit rendering, tests the module layer the dashboard drives:
+
+**Flow 1 — Analyst: Staleness Scores**
+- All configured domains load without gaps
+- FRESH classification when AI belief matches Gold value
+- CRITICAL classification when belief is completely wrong
+
+**Flow 2 — Operator: Pipeline Trace & Remediation**
+- Scan returns at least one report with actionable fields
+- Health summary exposes `failures_found` and `total_domains`
+- Low-risk fixes execute immediately without approval
+- High-risk fixes are blocked until a named approver is provided
+
+**Flow 3 — System: Context Injection**
+- No injection fires without a prior staleness signal
+- Correct Gold value injected after staleness is registered
+- Expired context (past TTL) is never injected
+
+**Flow 4 — CFO: Financial Exposure & Recovery**
+- Exposure figures are always non-negative
+- EU AI Act categories are always one of: Minimal / Limited / High / Unacceptable
+- Recovery value is non-negative after a correction
+- CFO summary exposes all three headline metrics
+- `net_aria_value_usd` never exceeds `total_recovered_usd`
+- ROI breakdown has at least one domain entry
+
+### Running all tests
+
+```bash
+pytest tests/ -v           # all 23 tests
+pytest tests/test_user_flows.py -v   # user flows only
+```
+
+---
+
+## 10. Known Limitations / Production Gaps
 
 | Gap | Impact | Mitigation / Path to fix |
 |---|---|---|
