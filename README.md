@@ -34,6 +34,15 @@ The system is designed for regulated industries where AI getting facts wrong has
 
 ---
 
+## Who Is This For
+
+- Data engineers maintaining ML pipelines in regulated industries where data drift has direct compliance risk
+- AI/ML engineers whose models answer from pre-indexed knowledge bases (drug formularies, rate tables, coverage rules)
+- Compliance teams in insurance, healthcare, or financial services needing AI audit trails for regulators
+- Platform teams building production AI systems that must not answer from stale data, period
+
+---
+
 ## Quickstart
 
 ```bash
