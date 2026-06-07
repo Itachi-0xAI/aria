@@ -7,7 +7,7 @@
 ## Quickstart
 
 ```bash
-git clone https://github.com/your-username/aria.git
+git clone https://github.com/Itachi-0xAI/aria.git
 cd aria
 pip install -r requirements.txt
 streamlit run aria.py    # → http://localhost:8501  (demo mode, no API key needed)

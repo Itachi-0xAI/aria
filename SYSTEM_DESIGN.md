@@ -128,6 +128,50 @@ staleness_score = min(divergence * (1 + 0.3 * time_decay), 1.0)
 
 ---
 
+#### Prompt Coverage Analyzer (`modules/dksm/prompt_coverage.py`)
+
+**Responsibility:** Measure how well a domain's `probe_questions` cover the edge
+cases that matter for each Gold-layer entity. Analogous to code coverage — but
+for prompts.
+
+**The gap:** `domains.yaml` lists `probe_questions` (8 per domain on average).
+Gold layer CSVs list the entities those probes are supposed to cover. Without
+coverage analysis, it's unknown whether the probes ever ask about expiry dates,
+tier changes, or stale model beliefs — the questions most likely to surface
+hallucinations.
+
+**Algorithm:**
+
+```
+For each domain:
+  1. Load current Gold-layer entities (is_current=True records)
+  2. For each entity, generate up to 7 canonical edge-case queries:
+       exact_value   → "What is the [value_col] for [entity]?"
+       tier          → "What tier is [entity] assigned to?" (if tier data present)
+       auth          → "Does [entity] require prior authorization?" (if prior_auth present)
+       comparison    → "How does [entity] compare to others in [domain]?"
+       expiry        → "When does [entity]'s value expire?" (if expiry_date present)
+       boundary      → "What is the threshold that defines [entity] in [domain]?"
+       stale_belief  → "Has [entity]'s value changed from [model_belief]?" (if belief ≠ value)
+  3. Embed all canonical queries + all probe questions (all-MiniLM-L6-v2)
+  4. Build [n_cases × n_probes] cosine similarity matrix
+  5. For each edge case: best_score = max similarity to any probe
+  6. covered = best_score >= threshold (default 0.55)
+  7. coverage_pct = covered_count / total_edge_cases × 100
+```
+
+**Output:** `DomainCoverageReport` with per-entity coverage, gap list, and
+auto-generated `suggested_probes` for every uncovered edge case.
+
+**CLI runner:** `python coverage.py` (all domains) or
+`python coverage.py drug_formulary --threshold=0.60`
+
+**Real results (drug_formulary, threshold=0.55):**
+- 59.4% coverage — Lisinopril and Atorvastatin have no expiry or boundary probes
+- 3 suggested probes auto-generated for uncovered gaps
+
+---
+
 ### 3.2 LCI — Live Context Injector
 
 **Responsibility:** Subscribe to STALENESS_DETECTED, pre-fetch the current Gold value, and prepend a verified context block to any LLM call before inference.
@@ -526,7 +570,7 @@ CRITICAL-severity events and High-risk remediation actions require explicit lead
 | `test_avl.py` | Exposure reports, recovery value, CFO value summary keys, domain coverage |
 | `test_fle.py` | Feedback routing decisions, correction signal handling |
 
-### User flow tests (added — 18 tests)
+### User flow tests (18 tests)
 
 `tests/test_user_flows.py` tests the system as real users interact with it — no Streamlit rendering, tests the module layer the dashboard drives:
 
@@ -557,9 +601,13 @@ CRITICAL-severity events and High-risk remediation actions require explicit lead
 ### Running all tests
 
 ```bash
-pytest tests/ -v           # all 23 tests
-pytest tests/test_user_flows.py -v   # user flows only
+pytest tests/ -v                    # all 23 tests
+pytest tests/test_user_flows.py -v  # user flows only (18 tests)
 ```
+
+**Total: 23 tests (5 unit + 18 user flows)**
+
+> Phase 2 will add `test_prompt_coverage.py` (18 tests) — prompt coverage analyzer covering edge case generation, gap detection, and suggested probes across all 7 domains.
 
 ---
 

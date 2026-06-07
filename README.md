@@ -37,7 +37,7 @@ The system is designed for regulated industries where AI getting facts wrong has
 ## Quickstart
 
 ```bash
-git clone https://github.com/your-username/aria.git
+git clone https://github.com/Itachi-0xAI/aria.git
 cd aria
 pip install -r requirements.txt
 cp .env.example .env          # add ANTHROPIC_API_KEY, or leave blank for demo mode
@@ -331,13 +331,24 @@ Event chain:
   FLE  → CORRECTION_APPLIED   {actions: [Gold flagged, chroma boosted, reprobe triggered]}
 ```
 
-![ARIA Dashboard](docs/screenshots/aria_collage.png)
+![ARIA Dashboard](assets/aria_collage.png)
 
 | Panel | What it shows |
 |-------|--------------|
 | **Top** | AI believed Enterprise min revenue = $6M. Gold layer says $7.5M. $1.8M exposure identified — 234x ROI on the fix. |
 | **Bottom left** | Every entity scored live — FRESH, STALE, or CRITICAL — with exact belief vs truth values. |
 | **Bottom right** | All 6 modules running in real time. 7 critical detections, 5 active injections, 4 pipeline failures traced. |
+
+### Dashboard Pages
+
+| | |
+|---|---|
+| ![Command Center](assets/command_center.png) | ![DKSM](assets/dksm.png) |
+| **Command Center** — module statuses, live event timeline, KPIs | **DKSM** — entity belief vs Gold truth, CRAG probe trigger |
+| ![LCI + PP](assets/lci_pp.png) | ![AVL](assets/avl.png) |
+| **LCI + PP** — active injections, pipeline failures, causal flow | **AVL** — domain exposure, EU AI Act risk, ROI multiplier |
+| ![FLE](assets/fle.png) | ![ASGC](assets/asgc.png) |
+| **FLE** — learning velocity, correction form, fine-tune pairs | **ASGC** — approval queue, causal chain, board report export |
 
 ---
 
@@ -347,6 +358,14 @@ Event chain:
 aria/
 ├── aria.py                          # 7-page Streamlit dashboard
 ├── requirements.txt
+├── assets/                          # demo screenshots (collage + per-page)
+│   ├── aria_collage.png
+│   ├── command_center.png
+│   ├── dksm.png
+│   ├── lci_pp.png
+│   ├── avl.png
+│   ├── fle.png
+│   └── asgc.png
 ├── config/
 │   ├── aria_config.yaml             # thresholds, module toggles, schedules
 │   ├── pipeline_map.yaml            # domain → dbt model mapping (7 domains)
@@ -359,6 +378,7 @@ aria/
 │   └── data_simulator.py            # demo data: 1,260 pipeline rows, 300 outcomes
 ├── modules/
 │   ├── dksm/                        # scorer, prober, vector_store, freshness_scheduler
+│   │   └── prompt_coverage.py       # edge-case coverage analyzer for probe questions
 │   ├── lci/                         # context_injector (inject + inject_and_prompt)
 │   ├── pp/                          # pipeline_pulse
 │   ├── avl/                         # value_ledger
@@ -366,6 +386,7 @@ aria/
 │   └── asgc/                        # governance_console
 ├── mcp/
 │   └── aria_mcp_server.py           # FastMCP server, 9 tools, Bearer auth
+├── coverage.py                      # CLI: python coverage.py [domain] [--threshold=0.60]
 └── tests/
     ├── test_event_bus.py
     ├── test_lci.py
@@ -389,7 +410,7 @@ CI runs automatically on every push and PR via GitHub Actions (Python 3.10 + 3.1
 
 | File | Tests | What it covers |
 |---|---|---|
-| `test_event_bus.py` | — | Event emission, subscription, JSONL persistence |
+| `test_event_bus.py` | — | Event emission, subscription, JSONL persistence, event ordering |
 | `test_lci.py` | 3 | Context injection, TTL expiry, pending state |
 | `test_pp.py` | 4 | Pipeline scan, health summary, remediation approval gates |
 | `test_avl.py` | 4 | Exposure reports, recovery value, value summary keys |
