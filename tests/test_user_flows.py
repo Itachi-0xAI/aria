@@ -35,6 +35,9 @@ def scorer():
 
 @pytest.fixture()
 def lci():
+    # Using __new__ to bypass __init__ side effects (DB connections, file I/O).
+    # Every private attribute LiveContextInjector.__init__ sets is wired manually below.
+    # If __init__ adds a new attribute, this fixture must be updated to match.
     obj = LiveContextInjector.__new__(LiveContextInjector)
     from core.config_loader import get_config
     from core.event_bus import get_bus
@@ -125,7 +128,7 @@ def test_high_risk_fix_runs_with_approval(pp):
     """High-risk fix executes when a named approver is provided."""
     opt = RemediationOption("full_refresh", "Rebuild entire table", 60, "High", False)
     res = pp.execute_remediation(opt, "customer_segments", approved_by="data-lead@company.com")
-    assert res.status in ("executed", "pending_approval")  # depends on impl
+    assert res.status == "executed"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
