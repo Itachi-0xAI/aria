@@ -17,6 +17,8 @@ from typing import Any
 import numpy as np
 import yaml
 
+from core.tracing import span as _span
+
 logger = logging.getLogger(__name__)
 
 
@@ -155,55 +157,68 @@ class StalenessScorer:
           - 1 - semantic_similarity (divergence)
           - time_decay_factor (older gold records amplify staleness)
         """
-        if not model_belief or not warehouse_truth:
+        with _span("aria.dksm.score") as active_span:
+            if not model_belief or not warehouse_truth:
+                result = StalenessScore(
+                    domain=domain,
+                    entity=entity,
+                    model_belief=model_belief or "",
+                    warehouse_truth=warehouse_truth or "",
+                    staleness_score=1.0,
+                    staleness_level="UNKNOWN",
+                    semantic_similarity=0.0,
+                    numeric_match=None,
+                    effective_date=effective_date,
+                    days_since_update=0,
+                    confidence=0.1,
+                )
+                if active_span is not None:
+                    active_span.set_attribute("aria.domain", domain)
+                    active_span.set_attribute("aria.entity", entity)
+                    active_span.set_attribute("aria.staleness_score", 1.0)
+                    active_span.set_attribute("aria.staleness_level", "UNKNOWN")
+                return result
+
+            sim = _semantic_similarity(model_belief, warehouse_truth)
+            days = _days_since(effective_date) if effective_date else 0
+            decay = _time_decay_factor(days)
+
+            # staleness_score: divergence amplified by age
+            divergence = 1.0 - sim
+            staleness_score = round(min(divergence * (1 + 0.3 * decay), 1.0), 4)
+
+            # Adjust similarity label: very stale data should read lower similarity
+            adjusted_sim = sim
+
+            thresholds = self._get_thresholds(domain)
+            level = self._classify(adjusted_sim, thresholds)
+
+            # Numeric match flag
+            bnum = _extract_number(model_belief)
+            tnum = _extract_number(warehouse_truth)
+            numeric_match = (abs(bnum - tnum) < 1.0) if (bnum is not None and tnum is not None) else None
+
+            confidence = round(0.6 + 0.4 * sim, 4)
+
+            if active_span is not None:
+                active_span.set_attribute("aria.domain", domain)
+                active_span.set_attribute("aria.entity", entity)
+                active_span.set_attribute("aria.staleness_score", staleness_score)
+                active_span.set_attribute("aria.staleness_level", level)
+
             return StalenessScore(
                 domain=domain,
                 entity=entity,
-                model_belief=model_belief or "",
-                warehouse_truth=warehouse_truth or "",
-                staleness_score=1.0,
-                staleness_level="UNKNOWN",
-                semantic_similarity=0.0,
-                numeric_match=None,
+                model_belief=model_belief,
+                warehouse_truth=warehouse_truth,
+                staleness_score=staleness_score,
+                staleness_level=level,
+                semantic_similarity=adjusted_sim,
+                numeric_match=numeric_match,
                 effective_date=effective_date,
-                days_since_update=0,
-                confidence=0.1,
+                days_since_update=days,
+                confidence=confidence,
             )
-
-        sim = _semantic_similarity(model_belief, warehouse_truth)
-        days = _days_since(effective_date) if effective_date else 0
-        decay = _time_decay_factor(days)
-
-        # staleness_score: divergence amplified by age
-        divergence = 1.0 - sim
-        staleness_score = round(min(divergence * (1 + 0.3 * decay), 1.0), 4)
-
-        # Adjust similarity label: very stale data should read lower similarity
-        adjusted_sim = sim
-
-        thresholds = self._get_thresholds(domain)
-        level = self._classify(adjusted_sim, thresholds)
-
-        # Numeric match flag
-        bnum = _extract_number(model_belief)
-        tnum = _extract_number(warehouse_truth)
-        numeric_match = (abs(bnum - tnum) < 1.0) if (bnum is not None and tnum is not None) else None
-
-        confidence = round(0.6 + 0.4 * sim, 4)
-
-        return StalenessScore(
-            domain=domain,
-            entity=entity,
-            model_belief=model_belief,
-            warehouse_truth=warehouse_truth,
-            staleness_score=staleness_score,
-            staleness_level=level,
-            semantic_similarity=adjusted_sim,
-            numeric_match=numeric_match,
-            effective_date=effective_date,
-            days_since_update=days,
-            confidence=confidence,
-        )
 
     def score_batch(self, records: list[dict[str, Any]]) -> list[StalenessScore]:
         """

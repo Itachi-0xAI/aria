@@ -2,6 +2,26 @@ aria:
   demo_mode: true
   install_id: 0fa67a68-3824-4a34-a1a9-5b40f3c056ae
   version: 1.0.0
+gold_layer:
+  # "csv" = local files (default, works offline)
+  # "sheets" = public Google Sheets CSV-export (no auth required for public sheets)
+  source: csv
+  # spreadsheet_id: YOUR_SHEET_ID   # e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms
+  sheets:
+    customer_segments:
+      gid: "0"          # sheet tab id from the URL ?gid=...
+    product_catalog:
+      gid: "0"
+    risk_thresholds:
+      gid: "0"
+    drug_formulary:
+      gid: "0"
+    coverage_limits:
+      gid: "0"
+    carrier_rates:
+      gid: "0"
+    coupons:
+      gid: "0"
 asgc:
   approval_required_for:
   - pipeline_auto_remediate

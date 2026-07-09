@@ -1,0 +1,72 @@
+# ARIA — Public Reference Connectors
+#
+# Maps each monitored domain to an optional public verification URL.
+# All listed endpoints are free, require no authentication, and return JSON.
+#
+# How to add your own:
+#   1. Find a public endpoint that returns authoritative values for your domain
+#      (government databases, open APIs, public REST endpoints).
+#   2. Add an entry below:
+#        your_domain:
+#          url: https://example.gov/api/endpoint.json
+#          description: "One-sentence note on what this endpoint returns"
+#          query_param: "search"          # optional — query parameter name
+#          demo_query: "example query"    # optional — value used in demo mode
+#   3. Wire it in aria.py or your connector code by reading this YAML:
+#        import yaml
+#        sources = yaml.safe_load(open("config/reference_sources.yaml"))
+#        url = sources["drug_formulary"]["url"]
+#   4. No code changes required for domains left blank (url: "").
+#
+# Free APIs used (no sign-up):
+#   openFDA   — https://open.fda.gov/apis/          (drug labels, recalls, NDC)
+
+domains:
+
+  drug_formulary:
+    url: "https://api.fda.gov/drug/label.json"
+    description: >
+      openFDA drug label endpoint. Query by drug name for dosage,
+      indications, and warnings. Free, unauthenticated, 1000 req/day.
+    query_param: "search"
+    demo_query: "openfda.brand_name:Humira"
+    notes: >
+      Append ?search=openfda.brand_name:YourDrug&limit=1 to retrieve
+      structured label JSON. Cross-reference copay_usd against formulary
+      records to detect Gold-layer drift.
+
+  customer_segments:
+    url: ""
+    description: >
+      No universal public source. Wire your own CRM export or internal
+      data warehouse endpoint. Leave url blank to skip reference checks.
+
+  risk_thresholds:
+    url: ""
+    description: >
+      Regulatory VaR thresholds vary by jurisdiction. Wire your own
+      regulatory feed (e.g. Basel IV internal models) or leave blank.
+
+  product_catalog:
+    url: ""
+    description: >
+      No public product-pricing authority. Wire your own ERP/PIM export
+      or a public price-comparison API if available for your vertical.
+
+  coverage_limits:
+    url: ""
+    description: >
+      Insurance coverage limits are jurisdiction-specific. Wire your own
+      state DOI feed or internal actuarial tables.
+
+  carrier_rates:
+    url: ""
+    description: >
+      Freight carrier rates are proprietary. Wire your own rate-sheet API
+      or logistics provider webhook.
+
+  coupons:
+    url: ""
+    description: >
+      Coupon values are internal. Wire your own promotions database or
+      loyalty-platform API.

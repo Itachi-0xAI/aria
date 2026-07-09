@@ -22,6 +22,30 @@ sys.path.insert(0, str(_ROOT))
 from core.data_simulator import run_all as _ensure_data
 _ensure_data()
 
+# ── /healthz — JSON status endpoint ──────────────────────────────────────────
+# Usage: open the app URL with ?healthz=1 — returns JSON and stops rendering.
+# Used by Streamlit Cloud uptime monitors and external health checks.
+_qp = st.query_params
+if _qp.get("healthz") == "1":
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz
+    _health_payload = {
+        "status": "ok",
+        "timestamp": _dt.now(_tz.utc).isoformat(),
+        "modules": {
+            "dksm": "enabled",
+            "lci":  "enabled",
+            "pp":   "enabled",
+            "avl":  "enabled",
+            "fle":  "enabled",
+            "asgc": "enabled",
+        },
+        "demo_mode": os.environ.get("ARIA_DEMO_MODE", "true"),
+        "version": "1.0.0",
+    }
+    st.json(_health_payload)
+    st.stop()
+
 st.set_page_config(
     page_title="ARIA — Adaptive Reasoning & Intelligence Architecture",
     page_icon="🧠",
@@ -139,6 +163,50 @@ def _sidebar() -> str:
             f'🔴 {pending} Pending Approval{"s" if pending != 1 else ""}</div>',
             unsafe_allow_html=True,
         )
+
+    # ── Production Mode badge ──────────────────────────────────────────────────
+    demo_mode = cfg.demo_mode
+    groq_key  = bool(os.environ.get("GROQ_API_KEY", "").strip())
+    gl_source = cfg._aria.get("gold_layer", {}).get("source", "csv")
+    sheets_id = cfg._aria.get("gold_layer", {}).get("spreadsheet_id", "")
+    live_data = (gl_source == "sheets" and bool(sheets_id)) or groq_key
+
+    if not demo_mode and live_data:
+        st.sidebar.markdown(
+            '<div style="background:#00CC88;color:#000;padding:6px 10px;'
+            'border-radius:8px;font-weight:bold;text-align:center;font-size:0.82em">'
+            '🟢 PRODUCTION MODE</div>',
+            unsafe_allow_html=True,
+        )
+        sources = []
+        if gl_source == "sheets" and sheets_id:
+            sources.append("Google Sheets")
+        if groq_key:
+            sources.append("Groq API")
+        st.sidebar.caption(f"Live sources: {', '.join(sources)}")
+    else:
+        st.sidebar.markdown(
+            '<div style="background:#FFA500;color:#000;padding:6px 10px;'
+            'border-radius:8px;font-weight:bold;text-align:center;font-size:0.82em">'
+            '🟡 DEMO MODE</div>',
+            unsafe_allow_html=True,
+        )
+        st.sidebar.caption("Offline — no API key required")
+
+    # ── /healthz status ────────────────────────────────────────────────────────
+    with st.sidebar.expander("🩺 Module Health"):
+        try:
+            health = _asgc().get_stack_health()
+            for mod, info in health.items():
+                status = info.get("status", "OK")
+                color  = "#00CC88" if status == "OK" else ("#FFA500" if status == "WARNING" else "#FF4B4B")
+                st.markdown(
+                    f'<span style="color:{color}">● {mod}</span> '
+                    f'<span style="color:#94a3b8;font-size:0.8em">{status}</span>',
+                    unsafe_allow_html=True,
+                )
+        except Exception as _e:
+            st.caption(f"Health check unavailable: {_e}")
 
     if st.sidebar.button("🔄 Refresh All"):
         st.cache_data.clear()
@@ -398,6 +466,59 @@ def page_dksm():
             )
     else:
         st.info("No scores for this domain.")
+
+    # ── Drift Diff Visualization ──────────────────────────────────────────────
+    st.divider()
+    st.subheader("Drift Diff — What AI Said vs What Gold Says")
+    st.caption("Side-by-side comparison for every entity in the selected domain. "
+               "Red = AI belief diverges from Gold truth.")
+
+    if domain_scores:
+        for sc in domain_scores:
+            info  = reasons.get((domain, sc.entity), {})
+            ai_val   = info.get("belief", sc.model_belief)   or sc.model_belief   or "—"
+            gold_val = info.get("truth",  sc.warehouse_truth) or sc.warehouse_truth or "—"
+            color    = _C.get(sc.staleness_level, _C["NEUTRAL"])
+            is_drift = str(ai_val).strip() != str(gold_val).strip()
+
+            diff_col1, diff_col2 = st.columns(2)
+            with diff_col1:
+                st.markdown(
+                    f'<div style="background:#2a1a1a;border:1px solid #FF4B4B;'
+                    f'border-radius:8px;padding:12px 16px">'
+                    f'<div style="font-size:0.72em;color:#FF4B4B;font-weight:700;'
+                    f'text-transform:uppercase;letter-spacing:1px">What AI Said</div>'
+                    f'<div style="font-weight:700;font-size:0.9em;margin-top:2px">{sc.entity}</div>'
+                    f'<div style="font-size:1.3em;font-weight:700;color:#FF4B4B;'
+                    f'margin-top:6px;font-family:monospace">{ai_val}</div>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+            with diff_col2:
+                st.markdown(
+                    f'<div style="background:#0d2a1a;border:1px solid #00CC88;'
+                    f'border-radius:8px;padding:12px 16px">'
+                    f'<div style="font-size:0.72em;color:#00CC88;font-weight:700;'
+                    f'text-transform:uppercase;letter-spacing:1px">What Gold Says</div>'
+                    f'<div style="font-weight:700;font-size:0.9em;margin-top:2px">{sc.entity}</div>'
+                    f'<div style="font-size:1.3em;font-weight:700;color:#00CC88;'
+                    f'margin-top:6px;font-family:monospace">{gold_val}</div>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+            drift_label = (
+                f'Drift detected — sim={sc.semantic_similarity:.3f} | {sc.days_since_update}d stale'
+                if is_drift else "No drift — values match"
+            )
+            st.markdown(
+                f'<div style="text-align:center;margin:4px 0 12px 0">'
+                f'<span style="background:{color};color:#fff;padding:2px 12px;'
+                f'border-radius:10px;font-size:0.78em;font-weight:700">'
+                f'{sc.staleness_level} — {drift_label}</span></div>',
+                unsafe_allow_html=True,
+            )
+    else:
+        st.info("Select a domain above to see the drift diff.")
 
     # ── Live Probe ──
     with st.expander("🔬 Live Probe — run a CRAG probe against the Gold layer"):

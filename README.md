@@ -1,7 +1,10 @@
-# ARIA — Adaptive Reasoning & Intelligence Architecture
+# ARIA — Real-Time AI Knowledge Integrity
 
-> **Stop your AI from confidently answering with yesterday's data.**
-> ARIA detects when your AI's knowledge has drifted from your data warehouse, fixes it at inference time without retraining, traces which pipeline broke, quantifies the dollar exposure, and learns from every correction.
+> Your AI chatbot answers from a pre-indexed knowledge base.
+> That index goes stale. Nobody notices. Customers get wrong answers.
+>
+> ARIA detects the drift and injects the correct data before the response —
+> no retraining, no pipeline changes, zero added latency.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-red)
@@ -12,23 +15,47 @@
 
 ## The Problem
 
-Every company running AI faces the same invisible risk: models are trained on historical data, but your business changes every week. Customer tiers get revised. Drug formularies get updated. Risk limits get restructured. Carrier rates expire.
-
-The AI doesn't know — and it answers with complete confidence.
+Most production AI systems (chatbots, support agents, knowledge tools) answer from a pre-indexed embedding store — not from live queries. That index is optimized for speed, not freshness. When your drug formulary changes, your carrier rates expire, or your pricing updates — the index doesn't know. The AI answers with complete confidence. And it's wrong.
 
 By the time a wrong answer surfaces (a mispriced quote, a denied claim, a failed compliance audit), the damage is done. And you still don't know *why* it happened, *how long* it's been wrong, or *which pipeline run* caused it.
 
 **ARIA closes that loop end-to-end:**
 
 ```
-Detect divergence → Fix at inference time → Trace root cause → Quantify impact → Learn
+Detect drift → Inject correct context → Trace root cause → Quantify impact → Learn
 ```
+
+---
+
+## Why doesn't the LLM just query live data on every call?
+
+Most production chatbots pre-index their knowledge base into embeddings for speed and cost. A live Snowflake query on every user message adds 200–800ms and real money at scale. The index trades freshness for performance.
+
+**ARIA bridges the gap without the latency penalty:**
+
+```
+                      User prompt arrives
+                              │
+        ┌─────────────────────┴──────────────────────┐
+        ▼                                            ▼
+  LLM generates response              ARIA staleness check
+  (200–800ms, from index)           (cached metadata, ~20ms)
+        │                                            │
+        └─────────────────────┬──────────────────────┘
+                              ▼
+              ARIA already knows: inject correction? yes/no
+                              │
+                              ▼
+              Final response → user (zero added latency)
+```
+
+ARIA's check runs in parallel with model generation using cached metadata — not a full warehouse query. Only on STALE/CRITICAL detection does it fetch the verified value and inject it into the prompt. ARIA's check completes in ~20ms while model generation takes 200–800ms, so no net latency is added when model generation dominates.
 
 ---
 
 ## Project Goal
 
-ARIA is a **real-time AI knowledge integrity layer** that sits between your AI systems and your data warehouse. It continuously monitors whether the AI's beliefs about your business domain align with ground truth in your Gold layer, and takes corrective action automatically — without retraining, without touching model weights, and without changing any existing pipeline.
+ARIA is a **real-time AI knowledge integrity layer** that sits between your AI systems and your data warehouse. It continuously monitors whether the retrieval index your AI answers from still matches ground truth in your Gold layer, and takes corrective action automatically — without re-indexing the entire knowledge base, without touching model weights, and without changing any existing pipeline.
 
 The system is designed for regulated industries where AI getting facts wrong has direct financial or compliance consequences: **insurance, healthcare, financial services, and logistics**.
 
@@ -55,10 +82,70 @@ streamlit run aria.py         # → http://localhost:8501
 
 **Demo mode is on by default** — the full 7-page dashboard runs without an API key using simulated data across all 7 domains. To enable live Anthropic API calls (CRAG probes + `inject_and_prompt()`), set `demo_mode: false` in `config/aria_config.yaml` and add your API key to `.env`.
 
+## Production Setup (free APIs, zero cost)
+
+```bash
+# 1. Get a free Groq key at https://console.groq.com/keys (no credit card)
+echo "GROQ_API_KEY=gsk_your_key_here" >> .env
+
+# 2. Publish your Gold layer Google Sheet (Share → Anyone with link → Viewer)
+#    Then set its ID and flip the source in config/aria_config.yaml:
+#      gold_layer.source: sheets
+#      gold_layer.spreadsheet_id: YOUR_SHEET_ID
+
+# 3. Disable demo mode
+sed -i 's/demo_mode: true/demo_mode: false/' config/aria_config.yaml
+
+# 4. Run — the sidebar shows a green "PRODUCTION MODE" badge
+streamlit run aria.py
+```
+
+ARIA then reads Gold data live from your public Google Sheet (no auth, free) and runs CRAG probes via Groq's free tier (14,400 req/day). All existing demo flows remain available with `demo_mode: true`.
+
 Optional — start the MCP server (9 tools for agent integration):
 ```bash
 python mcp/aria_mcp_server.py   # → port 8765
 ```
+
+---
+
+## The 30-Second Demo (no API key required)
+
+```bash
+streamlit run aria.py   # → http://localhost:8501
+```
+
+What you're looking at:
+
+| What the AI believes | What the Gold layer says | Days stale | Exposure |
+|---|---|---|---|
+| MacBook Pro = $1,000 | MacBook Pro = $900 | 47 days | $420,000 |
+| Enterprise min revenue = $6M | Enterprise min revenue = $7.5M | 718 days | $1,800,000 |
+| Humira copay = $90 | Humira copay = $45 | 87 days | $180,000 |
+
+Click any red row → see the before/after → see the pipeline failure that caused it → see the dollar exposure → approve the correction → watch the AI answer correctly on the next probe.
+
+No Snowflake. No dbt. No API key. Everything above runs on local demo data.
+
+---
+
+## The Dashboard Is Not the Product
+
+The product is one line of code:
+
+```python
+result = lci.inject_and_prompt(query, domain="drug_formulary")
+response = result["response"]   # answered with verified, current data
+```
+
+The dashboard is the governance and observability layer for the ops/data team:
+
+- Monitor staleness scores across all domains
+- Approve high-risk corrections before they're applied
+- Track which pipeline run caused a drift event
+- Export audit reports for compliance (EU AI Act, HIPAA, SOX)
+
+Everyday users interact via API or MCP — not the dashboard. The dashboard is the control tower, not the cockpit.
 
 ---
 
@@ -210,6 +297,30 @@ Security, observability, compliance:
 - **Data governance** — full audit trail with user/timestamp/reason, 90-day event bus archiving, PII encryption at rest, secrets from AWS Secrets Manager / Vault
 
 **After Phase 3:** ARIA is enterprise-grade — authenticated, multi-tenant, monitored, compliant with HIPAA and GDPR environments, and deployable via CI/CD.
+
+---
+
+## ARIA + CoAgent: Governance Decisions at Human Speed
+
+When ARIA's ASGC queue receives a high-risk approval request (schema patch, Gold layer modification, full re-index), the default workflow is a single human clicking Approve/Reject.
+
+CoAgent's DEBATE mode improves this: instead of one person deciding, two agents argue the remediation options (e.g., "immediately re-inject vs. quarantine until pipeline is fixed") while the data lead moderates and makes the final call — with the full reasoning trail recorded as an Architecture Decision Record.
+
+```python
+# Triggered by ASGC APPROVAL_REQUIRED event
+from coagent import CollabSession, modes
+
+session = CollabSession(mode=modes.DEBATE)
+session.add_agent(name="Re-inject Now",   role="advocate",
+    system_prompt="Argue for immediate context injection despite stale pipeline")
+session.add_agent(name="Quarantine First", role="advocate",
+    system_prompt="Argue for halting AI responses on this domain until pipeline fixed")
+session.add_human(name="Data Lead")
+session.start()
+# Result: DecisionRecord attached to the ASGC approval event
+```
+
+See [STACK.md](STACK.md) for how ARIA, CoAgent, and ConsistencyGuard compose.
 
 ---
 
@@ -439,12 +550,44 @@ CI runs automatically on every push and PR via GitHub Actions (Python 3.10 + 3.1
 
 ---
 
+## Complementary Features
+
+Four additions built on free APIs, zero new pip dependencies:
+
+- **Cross-model staleness probe** (`modules/dksm/multi_prober.py`) — probes the same entity with Groq (llama-3.1-8b-instant) and Google Gemini Flash. If both agree on a wrong value, the index is universally stale; if they disagree, the issue is model-specific. Falls back gracefully when keys are absent.
+- **Public reference connectors** (`config/reference_sources.yaml`) — YAML scaffold mapping each domain to an optional free public verification URL. `drug_formulary` wires to openFDA (`api.fda.gov/drug/label.json`); other domains document how to add your own endpoint.
+- **JSON `/healthz` endpoint** (`aria.py`) — append `?healthz=1` to the Streamlit URL to get a JSON status payload (modules, timestamp, demo mode). Used by Streamlit Cloud uptime monitors.
+- **Drift diff visualization** (DKSM page) — side-by-side "What AI Said / What Gold Says" panels with colour-coded staleness badge for every entity in the selected domain. No new deps — pure `st.columns` + Streamlit markdown.
+
+- **Wikipedia staleness cross-check** (`modules/dksm/wiki_verifier.py`) — `verify_via_wikipedia(entity, gold_value)` calls the free, unauthenticated Wikipedia REST API (`/api/rest_v1/page/summary/{entity}`) and returns whether the Gold-layer value appears in the article summary. Falls back gracefully on 404, disambiguation pages, or network errors; stdlib only (`urllib.request`, `json`); 5-second timeout.
+- **OpenTelemetry tracing** (`core/tracing.py`) — install `opentelemetry-api` to emit spans from `StalenessScorer.score()` and `LiveContextInjector.inject()` with domain, entity, staleness score, and injection status attributes; no-op with zero cost when OTel is absent.
+- **Coverage gap CLI** (`coverage.py --gap-report`) — runs `PromptCoverageAnalyzer` across all domains, ranks uncovered `(entity, suggested_probe)` pairs by entity importance, prints a top-10 Rich table to stdout, and writes the full ranked list to `coverage_gaps.json` at the repo root. No new dependencies.
+
+Free APIs credited: openFDA (unauthenticated, 1000 req/day), Groq free tier (14,400 req/day), Google Gemini Flash free tier, Wikipedia REST (unauthenticated, no rate limit for reasonable use).
+
+---
+
 ## Further Reading
 
 | Document | What's in it |
 |----------|-------------|
 | [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) | Architecture diagrams, module breakdown, event bus schema, data flow, design decisions, known limitations |
 | [ONBOARDING.md](ONBOARDING.md) | Step-by-step demo guide for both use cases, all 7 domains, what works in demo mode vs production |
+| [STACK.md](STACK.md) | How ARIA, CoAgent, and ConsistencyGuard compose into one AI trust stack |
+
+---
+
+## Ecosystem
+
+ARIA is one layer of a three-part open-source AI trust stack. Each tool catches a different failure mode:
+
+| Failure mode | Tool | When it fires |
+|---|---|---|
+| AI answers from stale index | **ARIA** *(this repo)* | Before response |
+| AI decision has no reasoning trail | **[CoAgent](https://github.com/Itachi-0xAI/coagent)** | During decision |
+| AI contradicts itself over time | **[ConsistencyGuard](https://github.com/Itachi-0xAI/consistencyguard)** | After response |
+
+See [STACK.md](STACK.md) for the integration patterns and a worked end-to-end example.
 
 ---
 

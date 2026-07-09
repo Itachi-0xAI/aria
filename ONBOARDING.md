@@ -133,3 +133,25 @@ Three gaps matter most before a production deployment:
 | No real decision log | AVL dollar values are simulated | Phase 1 — wire `business_outcomes.csv` to Salesforce / CRM |
 
 For the full system architecture, event bus schema, and design decisions: **[SYSTEM_DESIGN.md](SYSTEM_DESIGN.md)**
+
+---
+
+## ARIA + CoAgent for High-Risk Approvals
+
+By default the ASGC approval queue is a single click. For high-stakes remediations (full re-index, Gold layer modification, schema patch) you can route the decision through [CoAgent](https://github.com/Itachi-0xAI/coagent)'s DEBATE mode:
+
+```python
+# On ASGC APPROVAL_REQUIRED event
+from coagent import CollabSession, modes
+
+session = CollabSession(mode=modes.DEBATE)
+session.add_agent(name="Re-inject Now",   role="advocate",
+    system_prompt="Argue for immediate context injection despite stale pipeline")
+session.add_agent(name="Quarantine First", role="advocate",
+    system_prompt="Argue for halting AI responses on this domain until pipeline fixed")
+session.add_human(name="Data Lead")
+session.start()
+# DecisionRecord persisted alongside the ASGC event for the audit trail
+```
+
+See [STACK.md](STACK.md) for the full three-tool integration pattern.

@@ -7,7 +7,7 @@ An AI knowledge integrity layer that detects, corrects, and governs stale AI kno
 
 ## 1. Overview / Goals
 
-ARIA solves the "stale AI" problem: LLMs trained on historical data will confidently assert outdated business values (prices, thresholds, drug formularies, coverage limits) as if they were current. In regulated industries this causes real financial and compliance exposure.
+ARIA solves the "stale AI" problem: production LLM systems answer from pre-indexed embedding stores built from historical snapshots. When the underlying business data changes (prices, thresholds, drug formularies, coverage limits) the retrieval index doesn't reflect the new ground truth — and the LLM confidently asserts outdated values as if they were current. In regulated industries this causes real financial and compliance exposure.
 
 **Core goals:**
 
@@ -506,6 +506,28 @@ One persistent ChromaDB client at `data/chroma_db/`. Collections per domain/laye
 ---
 
 ## 8. Key Design Decisions
+
+### 8.0 Why Not Just Update the RAG Index?
+
+A reasonable objection: "If the retrieval index is stale, just re-index it."
+
+The answer is that re-indexing is **batch**, not **real-time**:
+
+- Production RAG pipelines re-index nightly or weekly. Some run monthly because re-embedding a million documents costs real money and CPU/GPU time.
+- Between two re-index runs, every wrong answer the AI gives is invisible — until a customer complains, a regulator audits, or a CFO notices the revenue gap.
+- Even when re-indexing runs, *which* domain was actually stale and *why* it went stale is not recorded anywhere. Operators discover the failure after the damage is done.
+
+ARIA is a **real-time check layer on top of whatever retrieval system already exists**. It is not a replacement for RAG. It does not rebuild your embeddings. It does not own your knowledge base.
+
+What it does:
+
+1. Probes the live retrieval index with CRAG-style queries and compares the answer against the Gold layer
+2. Scores divergence (FRESH / STALE / CRITICAL) per entity, per domain
+3. On STALE/CRITICAL, fetches the verified value and injects it into the prompt for the *next* call — the customer never sees the wrong answer
+4. Fires a `REPROBE_REQUESTED` event so the existing RAG pipeline can re-index the affected domain on its normal schedule
+5. Records the full causal chain (which Gold record drifted, which dbt run caused it, which injections fixed it) for audit
+
+ARIA and the RAG pipeline are complementary: RAG owns retrieval, ARIA owns freshness.
 
 ### 8.1 Event bus over direct imports
 

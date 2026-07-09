@@ -22,6 +22,7 @@ import yaml
 
 from core.event_bus import ARIAEvent, get_bus
 from core.config_loader import get_config
+from core.tracing import span as _span
 
 logger = logging.getLogger(__name__)
 
@@ -112,58 +113,66 @@ class LiveContextInjector:
         Called by any agent before LLM inference.
         Returns an InjectionResult whose context_block is prepended to the prompt.
         """
-        matched = self._find_pending(domain)
-        if not matched:
-            return InjectionResult(injected=False)
+        with _span("aria.lci.inject") as active_span:
+            matched = self._find_pending(domain)
+            if not matched:
+                if active_span is not None:
+                    active_span.set_attribute("aria.domain", domain)
+                    active_span.set_attribute("aria.injected", False)
+                return InjectionResult(injected=False)
 
-        entry = matched
-        injection_id = str(uuid.uuid4())[:8]
-        now           = datetime.now(timezone.utc)
-        expires_at    = entry["expires"]
+            entry = matched
+            injection_id = str(uuid.uuid4())[:8]
+            now           = datetime.now(timezone.utc)
+            expires_at    = entry["expires"]
 
-        context_block = (
-            f"[ARIA VERIFIED CONTEXT — {now.strftime('%Y-%m-%d %H:%M UTC')}]\n"
-            f"Source: Gold layer {entry['version']} (enterprise data warehouse)\n"
-            f"Entity: {entry['entity']} (domain: {domain})\n"
-            f"Current value: {entry['value']}\n"
-            f"Note: This value supersedes any prior model knowledge. "
-            f"Valid until {expires_at.strftime('%H:%M UTC')}.\n"
-        )
+            context_block = (
+                f"[ARIA VERIFIED CONTEXT — {now.strftime('%Y-%m-%d %H:%M UTC')}]\n"
+                f"Source: Gold layer {entry['version']} (enterprise data warehouse)\n"
+                f"Entity: {entry['entity']} (domain: {domain})\n"
+                f"Current value: {entry['value']}\n"
+                f"Note: This value supersedes any prior model knowledge. "
+                f"Valid until {expires_at.strftime('%H:%M UTC')}.\n"
+            )
 
-        self._append_log({
-            "injection_id":  injection_id,
-            "timestamp":     now.isoformat(),
-            "domain":        domain,
-            "entity":        entry["entity"],
-            "injected_value": entry["value"],
-            "query_preview": query[:120],
-            "source_version": entry["version"],
-            "expires_at":    expires_at.isoformat(),
-            "triggered_by":  "agent_call",
-        })
-
-        self._bus.emit(ARIAEvent(
-            source_module="LCI",
-            event_type="CONTEXT_INJECTED",
-            domain=domain,
-            entity=entry["entity"],
-            payload={
-                "injection_id":   injection_id,
+            self._append_log({
+                "injection_id":  injection_id,
+                "timestamp":     now.isoformat(),
+                "domain":        domain,
+                "entity":        entry["entity"],
                 "injected_value": entry["value"],
-                "query_preview":  query[:80],
-            },
-            severity="INFO",
-        ))
+                "query_preview": query[:120],
+                "source_version": entry["version"],
+                "expires_at":    expires_at.isoformat(),
+                "triggered_by":  "agent_call",
+            })
 
-        return InjectionResult(
-            injected=True,
-            entity=entry["entity"],
-            injected_value=entry["value"],
-            injection_id=injection_id,
-            context_block=context_block,
-            source_version=entry["version"],
-            expires_at=expires_at,
-        )
+            self._bus.emit(ARIAEvent(
+                source_module="LCI",
+                event_type="CONTEXT_INJECTED",
+                domain=domain,
+                entity=entry["entity"],
+                payload={
+                    "injection_id":   injection_id,
+                    "injected_value": entry["value"],
+                    "query_preview":  query[:80],
+                },
+                severity="INFO",
+            ))
+
+            if active_span is not None:
+                active_span.set_attribute("aria.domain", domain)
+                active_span.set_attribute("aria.injected", True)
+
+            return InjectionResult(
+                injected=True,
+                entity=entry["entity"],
+                injected_value=entry["value"],
+                injection_id=injection_id,
+                context_block=context_block,
+                source_version=entry["version"],
+                expires_at=expires_at,
+            )
 
     def inject_and_prompt(self, query: str, domain: str, entity: str = "") -> dict:
         """
